@@ -23,5 +23,13 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
+  },
+  "scripts": {
+    "webpack watch": "webpack --watch",
+    "webpack build": "NODE_ENV='production' webpack -p",
+    "webpack start": "webpack; webpack-dev-server --inline --content-base",
+    "flow": "flow",
+    "lint": "eslint ./src/**.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

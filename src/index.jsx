@@ -1,17 +1,9 @@
 /* @flow */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-class App extends React.Component {
-  render() {
-    return (
-      <div>app</div>
-    )
-  }
-}
+import Root from './Root';
 
 ReactDOM.render(
-  <App />,
+  <Root />,
   document.getElementById('app')
 );

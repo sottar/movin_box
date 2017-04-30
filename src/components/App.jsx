@@ -10,7 +10,7 @@ export default class App extends React.Component {
         <ul className="link">
           <li><Link to="/">Top</Link></li>
           <li><Link to="/list">list</Link></li>
-          <li><Link to="/play">play</Link></li>
+          <li><Link to="/play/1">play</Link></li>
         </ul>
         {this.props.children}
       </div>

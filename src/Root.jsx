@@ -18,7 +18,7 @@ export default class Root extends React.Component {
           <Route path="/" component={App}>
             <IndexRoute component={Top} />
             <Route path="/list" component={List} />
-            <Route path="/play" component={Play} />
+            <Route path="/play/:level" component={Play} />
           </Route>
         </Router>
       </Provider>

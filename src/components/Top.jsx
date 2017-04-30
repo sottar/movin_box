@@ -38,6 +38,6 @@ const style = {
     color: '#4fc3f7',
     fontWeight: 'bold',
     textDecoration: 'none',
-    backgroundColor: '#efefef',
+    backgroundColor: '#fefefe',
   },
 };

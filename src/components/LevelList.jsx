@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import { Link } from 'react-router';
 import { m } from '../utils';
 
 export default class LevelList extends React.Component {
@@ -11,11 +12,23 @@ export default class LevelList extends React.Component {
       for (let n = 0; n < levelPerColumn; n++) {
         const currentNum: number = (i - 1) * levelPerColumn + 1 + n;
         if (this.props.clearedLevels.indexOf(currentNum) >= 0) {
-          list.push(<li key={currentNum} style={m(style.box, style.clearedBox)} data-level={currentNum}>{currentNum}</li>);
+          list.push(
+            <li key={currentNum} style={style.box}>
+              <Link to={'/play/' + currentNum} style={m(style.link, style.clearedLink)}>
+                {currentNum}
+              </Link>
+            </li>
+          );
         } else if (this.props.openedLevels.indexOf(currentNum) >= 0) {
-          list.push(<li key={currentNum} style={m(style.box, style.openedBox)} data-level={currentNum}>{currentNum}</li>);
+          list.push(
+            <li key={currentNum} style={style.box}>
+              <Link to={'/play/' + currentNum} style={m(style.link, style.openedLink)}>
+                {currentNum}
+              </Link>
+            </li>
+          );
         } else {
-          list.push(<li key={currentNum} style={m(style.box, style.closedBox)} data-level={currentNum}>{currentNum}</li>);
+          list.push(<li key={currentNum} style={m(style.box, style.closedBox)}>{currentNum}</li>);
         }
       }
       result.push(
@@ -50,14 +63,19 @@ const style = {
     lineHeight: '50px',
     textAlign: 'center',
   },
-  clearedBox: {
-    background: '#4fc3f7',
-  },
-  openedBox: {
-    background: '#e0e0e0',
-    color: '#4fc3f7',
-  },
   closedBox: {
     background: '#616161',
+  },
+  link: {
+    display: 'block',
+    textDecoration: 'none',
+  },
+  clearedLink: {
+    background: '#4fc3f7',
+    color: '#eee',
+  },
+  openedLink: {
+    background: '#e0e0e0',
+    color: '#4fc3f7',
   },
 };

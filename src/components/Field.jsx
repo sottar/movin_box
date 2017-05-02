@@ -76,7 +76,7 @@ export default class Field extends React.Component {
         left: boxInfo[i].position[0] * cellSize,
         top: boxInfo[i].position[1] * cellSize,
       };
-      boxes.push(<div style={m(style.box, currentStyle)} key={i}></div>);
+      boxes.push(<div style={m(style.box, currentStyle)} key={i} onTouchStart={this.handleTouchStart.bind(this)} onTouchEnd={this.handleTouchEnd.bind(this)} data-boxid={boxInfo[i].id}></div>);
     }
     return boxes;
   }
@@ -103,6 +103,12 @@ export default class Field extends React.Component {
       goals.push(<div style={m(style.goal, currentStyle)} key={i}></div>);
     }
     return goals;
+  }
+  handleTouchStart(e: any): void {
+    this.props.onTouchStart(e);
+  }
+  handleTouchEnd(e: any): void {
+    this.props.onTouchEnd(e);
   }
   render() {
     const matrix = this.createMatrix(this.props.fieldInfo);

@@ -13954,7 +13954,7 @@ var Field = function (_React$Component) {
           left: boxInfo[i].position[0] * cellSize,
           top: boxInfo[i].position[1] * cellSize
         };
-        boxes.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.box, currentStyle), key: i }));
+        boxes.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.box, currentStyle), key: i, onTouchStart: this.handleTouchStart.bind(this), onTouchEnd: this.handleTouchEnd.bind(this), 'data-boxid': boxInfo[i].id }));
       }
       return boxes;
     }
@@ -13983,6 +13983,16 @@ var Field = function (_React$Component) {
         goals.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.goal, currentStyle), key: i }));
       }
       return goals;
+    }
+  }, {
+    key: 'handleTouchStart',
+    value: function handleTouchStart(e) {
+      this.props.onTouchStart(e);
+    }
+  }, {
+    key: 'handleTouchEnd',
+    value: function handleTouchEnd(e) {
+      this.props.onTouchEnd(e);
     }
   }, {
     key: 'render',
@@ -14257,12 +14267,48 @@ var Play = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Play.__proto__ || Object.getPrototypeOf(Play)).call(this, props));
 
     _this.state = {
-      fieldInfo: null
-    };
+      fieldInfo: null,
+      startPosition: [] };
+    _this.moveBox = _this.moveBox.bind(_this);
+    _this.touchStart = _this.touchStart.bind(_this);
+    _this.touchEnd = _this.touchEnd.bind(_this);
     return _this;
   }
 
   _createClass(Play, [{
+    key: 'touchStart',
+    value: function touchStart(event) {
+      if (event.touches.length != 1) {
+        return;
+      }
+      this.state.startPosition[0] = event.touches[0].screenX;
+      this.state.startPosition[1] = event.touches[0].screenY;
+      event.preventDefault();
+    }
+  }, {
+    key: 'touchEnd',
+    value: function touchEnd(event) {
+      var id = Number(event.currentTarget.getAttribute('data-boxid'));
+      if (event.changedTouches.length != 1) {
+        return;
+      }
+      var deltaX = event.changedTouches[0].screenX - this.state.startPosition[0];
+      var deltaY = event.changedTouches[0].screenY - this.state.startPosition[1];
+      var direction = -1; // left:0, up:1, right:2, down:3
+      if (Math.abs(deltaX) > 3 * Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+        direction = deltaX > 0 ? 2 : 0;
+      } else if (Math.abs(deltaY) > 3 * Math.abs(deltaX) && Math.abs(deltaY) > 30) {
+        direction = deltaY > 0 ? 3 : 1;
+      }
+      this.moveBox(id, direction);
+    }
+  }, {
+    key: 'moveBox',
+    value: function moveBox(boxId, direction) {
+      console.log('boxId: ', boxId);
+      console.log('direction: ', direction);
+    }
+  }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
       var currentFiled = _FieldList.FieldList[this.props.params.level - 1];
@@ -14279,7 +14325,9 @@ var Play = function (_React$Component) {
         _react2.default.createElement(_Header2.default, null),
         _react2.default.createElement(_Field2.default, {
           level: this.props.level,
-          fieldInfo: this.state.fieldInfo
+          fieldInfo: this.state.fieldInfo,
+          onTouchStart: this.touchStart,
+          onTouchEnd: this.touchEnd
         })
       );
     }

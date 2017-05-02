@@ -1,26 +1,30 @@
 /* @flow */
 import React from 'react';
+import type {FieldInfo} from '../Types';
 
 export default class Field extends React.Component {
   constructor(props: any) {
     super(props);
   }
-  createMatrix(horizontal: number, vertical: number): Array<React.Element<*>> {
+  createMatrix(fieldInfo: FieldInfo): Array<React.Element<*>> {
     let result: Array<React.Element<*>> = [];
+    const horizontal: number = fieldInfo.matrix[0];
+    const vertical: number = fieldInfo.matrix[1];
+    const cellSize: number = 40;
     const style = {
       wrap: {
         display: 'flex',
         flexWrap: 'wrap',
         margin: '100px auto 0',
-        width: horizontal * 40,
-        height: vertical * 40,
+        width: horizontal * cellSize,
+        height: vertical * cellSize,
         border: '2px solid #333',
         background: '#fefefe',
       },
       cells: {
         margin: 0,
-        width: '40px',
-        height: '40px',
+        width: cellSize + 'px',
+        height: cellSize + 'px',
         boxSizing: 'border-box',
         border: '1px solid #333',
       },
@@ -37,7 +41,7 @@ export default class Field extends React.Component {
     return result;
   }
   render() {
-    const matrix = this.createMatrix(this.props.matrix[0], this.props.matrix[1]);
+    const matrix = this.createMatrix(this.props.fieldInfo);
     return (
       <div>
         {matrix}

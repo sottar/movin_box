@@ -13848,22 +13848,25 @@ var Field = function (_React$Component) {
 
   _createClass(Field, [{
     key: 'createMatrix',
-    value: function createMatrix(horizontal, vertical) {
+    value: function createMatrix(fieldInfo) {
       var result = [];
+      var horizontal = fieldInfo.matrix[0];
+      var vertical = fieldInfo.matrix[1];
+      var cellSize = 40;
       var style = {
         wrap: {
           display: 'flex',
           flexWrap: 'wrap',
           margin: '100px auto 0',
-          width: horizontal * 40,
-          height: vertical * 40,
+          width: horizontal * cellSize,
+          height: vertical * cellSize,
           border: '2px solid #333',
           background: '#fefefe'
         },
         cells: {
           margin: 0,
-          width: '40px',
-          height: '40px',
+          width: cellSize + 'px',
+          height: cellSize + 'px',
           boxSizing: 'border-box',
           border: '1px solid #333'
         }
@@ -13882,7 +13885,7 @@ var Field = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var matrix = this.createMatrix(this.props.matrix[0], this.props.matrix[1]);
+      var matrix = this.createMatrix(this.props.fieldInfo);
       return _react2.default.createElement(
         'div',
         null,
@@ -14152,10 +14155,7 @@ var Play = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Play.__proto__ || Object.getPrototypeOf(Play)).call(this, props));
 
     _this.state = {
-      matrix: [0, 0],
-      availablePositions: [],
-      boxInfo: [],
-      goalInfo: []
+      fieldInfo: null
     };
     return _this;
   }
@@ -14165,10 +14165,7 @@ var Play = function (_React$Component) {
     value: function componentWillMount() {
       var currentFiled = _FieldList.FieldList[this.props.params.level - 1];
       this.setState({
-        matrix: currentFiled.matrix,
-        availablePositions: currentFiled.availablePositions,
-        boxInfo: currentFiled.boxInfo,
-        goalInfo: currentFiled.goalInfo
+        fieldInfo: currentFiled
       });
     }
   }, {
@@ -14180,10 +14177,7 @@ var Play = function (_React$Component) {
         _react2.default.createElement(_Header2.default, null),
         _react2.default.createElement(_Field2.default, {
           level: this.props.level,
-          matrix: this.state.matrix,
-          availablePositions: this.state.availablePositions,
-          boxInfo: this.state.boxInfo,
-          GoalInfo: this.state.goalInfo
+          fieldInfo: this.state.fieldInfo
         })
       );
     }
@@ -14327,33 +14321,33 @@ var Level1 = exports.Level1 = {
   boxInfo: [{
     id: 1,
     position: [3, 3],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }, {
     id: 2,
     position: [3, 4],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }, {
     id: 3,
     position: [3, 5],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }],
   goalInfo: [{
     id: 1,
     position: [6, 3],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }, {
     id: 2,
     position: [6, 4],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }, {
     id: 3,
     position: [6, 5],
-    color: 'red',
+    color: '#f9a825',
     cleared: false
   }]
 };

@@ -16,19 +16,25 @@ export const Level1: FieldInfo = {
   boxInfo: [
     {
       id: 1,
-      position: [3, 3],
+      position: [1, 2],
       color: '#f9a825',
       cleared: false,
     },
     {
       id: 2,
-      position: [3, 4],
+      position: [1, 3],
       color: '#f9a825',
       cleared: false,
     },
     {
       id: 3,
-      position: [3, 5],
+      position: [1, 4],
+      color: '#f9a825',
+      cleared: false,
+    },
+    {
+      id: 3,
+      position: [1, 5],
       color: '#f9a825',
       cleared: false,
     },

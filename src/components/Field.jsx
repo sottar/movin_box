@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react';
-import type {FieldInfo} from '../Types';
+import type { FieldInfo, BoxInfo } from '../Types';
+import { m } from '../utils';
 
 export default class Field extends React.Component {
   constructor(props: any) {
@@ -13,6 +14,7 @@ export default class Field extends React.Component {
     const cellSize: number = 40;
     const style = {
       wrap: {
+        position: 'relative',
         display: 'flex',
         flexWrap: 'wrap',
         margin: '100px auto 0',
@@ -21,6 +23,16 @@ export default class Field extends React.Component {
         border: '2px solid #333',
         background: '#fefefe',
       },
+    };
+    const cells = this.createCells(fieldInfo, cellSize);
+    const boxes = this.createBoxes(fieldInfo, cellSize);
+    result.push(
+      <div style={style.wrap} key={0}>{cells}{boxes}</div>
+    );
+    return result;
+  }
+  createCells(fieldInfo: FieldInfo, cellSize: number): Array<React.Element<*>> {
+    const style = {
       cells: {
         margin: 0,
         width: cellSize + 'px',
@@ -28,17 +40,45 @@ export default class Field extends React.Component {
         boxSizing: 'border-box',
         border: '1px solid #333',
       },
+      blockCell: {
+        backgroundColor: '#555',
+      },
     };
     let cells = [];
-    for (let i = 1; i <= horizontal * vertical; i++) {
-      cells.push(
-        <div style={style.cells} key={i}></div>
-      );
+    for (let v = 0, vlen = fieldInfo.availablePositions.length; v < vlen; v++) {
+      for (let h = 0, hlen = fieldInfo.availablePositions[v].length; h < hlen; h++) {
+        if (fieldInfo.availablePositions[v][h] == 0) {
+          cells.push(<div style={m(style.cells, style.blockCell)} key={v + ',' + h}></div>);
+        } else {
+          cells.push(<div style={style.cells} key={v + ',' + h}></div>);
+        }
+      }
     }
-    result.push(
-      <div style={style.wrap} key={0}>{cells}</div>
-    );
-    return result;
+    return cells;
+  }
+  createBoxes(fieldInfo: FieldInfo, cellSize: number) {
+    let boxes = [];
+    const style = {
+      box: {
+        position: 'absolute',
+        margin: 0,
+        width: cellSize + 'px',
+        height: cellSize + 'px',
+        boxSizing: 'border-box',
+        border: '1px solid #333',
+      },
+    };
+    const boxInfo: Array<BoxInfo> = fieldInfo.boxInfo;
+    for (let i = 0, len = boxInfo.length; i < len; i++) {
+      boxInfo[i];
+      const currentStyle = {
+        backgroundColor: boxInfo[i].color,
+        left: boxInfo[i].position[0] * cellSize,
+        top: boxInfo[i].position[1] * cellSize,
+      };
+      boxes.push(<div style={m(style.box, currentStyle)} key={i}></div>);
+    }
+    return boxes;
   }
   render() {
     const matrix = this.createMatrix(this.props.fieldInfo);

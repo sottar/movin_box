@@ -7,7 +7,7 @@ export default class Field extends React.Component {
   constructor(props: any) {
     super(props);
   }
-  createMatrix(fieldInfo: FieldInfo): Array<React.Element<*>> {
+  createMatrix(fieldInfo: FieldInfo, boxInfoList: Array<BoxInfo>): Array<React.Element<*>> {
     let result: Array<React.Element<*>> = [];
     const horizontal: number = fieldInfo.matrix[0];
     const vertical: number = fieldInfo.matrix[1];
@@ -25,7 +25,7 @@ export default class Field extends React.Component {
       },
     };
     const cells = this.createCells(fieldInfo, cellSize);
-    const boxes = this.createBoxes(fieldInfo, cellSize);
+    const boxes = this.createBoxes(boxInfoList, cellSize);
     const goals = this.createGoals(fieldInfo, cellSize);
     result.push(
       <div style={style.wrap} key={0}>{cells}{boxes}{goals}</div>
@@ -57,7 +57,7 @@ export default class Field extends React.Component {
     }
     return cells;
   }
-  createBoxes(fieldInfo: FieldInfo, cellSize: number): Array<React.Element<*>> {
+  createBoxes(boxInfoList: Array<BoxInfo>, cellSize: number): Array<React.Element<*>> {
     let boxes = [];
     const style = {
       box: {
@@ -67,16 +67,16 @@ export default class Field extends React.Component {
         height: cellSize + 'px',
         boxSizing: 'border-box',
         border: '1px solid #333',
+        transition: 'all 0.5s',
       },
     };
-    const boxInfo: Array<BoxInfo> = fieldInfo.boxInfo;
-    for (let i = 0, len = boxInfo.length; i < len; i++) {
+    for (let i = 0, len = boxInfoList.length; i < len; i++) {
       const currentStyle = {
-        backgroundColor: boxInfo[i].color,
-        left: boxInfo[i].position[0] * cellSize,
-        top: boxInfo[i].position[1] * cellSize,
+        backgroundColor: boxInfoList[i].color,
+        left: boxInfoList[i].position[0] * cellSize,
+        top: boxInfoList[i].position[1] * cellSize,
       };
-      boxes.push(<div style={m(style.box, currentStyle)} key={i} onTouchStart={this.handleTouchStart.bind(this)} onTouchEnd={this.handleTouchEnd.bind(this)} data-boxid={boxInfo[i].id}></div>);
+      boxes.push(<div style={m(style.box, currentStyle)} key={i} onTouchStart={this.handleTouchStart.bind(this)} onTouchEnd={this.handleTouchEnd.bind(this)} data-boxid={boxInfoList[i].id}></div>);
     }
     return boxes;
   }
@@ -111,7 +111,7 @@ export default class Field extends React.Component {
     this.props.onTouchEnd(e);
   }
   render() {
-    const matrix = this.createMatrix(this.props.fieldInfo);
+    const matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
     return (
       <div>
         {matrix}

@@ -13877,7 +13877,7 @@ var Field = function (_React$Component) {
 
   _createClass(Field, [{
     key: 'createMatrix',
-    value: function createMatrix(fieldInfo) {
+    value: function createMatrix(fieldInfo, boxInfoList) {
       var result = [];
       var horizontal = fieldInfo.matrix[0];
       var vertical = fieldInfo.matrix[1];
@@ -13895,7 +13895,7 @@ var Field = function (_React$Component) {
         }
       };
       var cells = this.createCells(fieldInfo, cellSize);
-      var boxes = this.createBoxes(fieldInfo, cellSize);
+      var boxes = this.createBoxes(boxInfoList, cellSize);
       var goals = this.createGoals(fieldInfo, cellSize);
       result.push(_react2.default.createElement(
         'div',
@@ -13935,7 +13935,7 @@ var Field = function (_React$Component) {
     }
   }, {
     key: 'createBoxes',
-    value: function createBoxes(fieldInfo, cellSize) {
+    value: function createBoxes(boxInfoList, cellSize) {
       var boxes = [];
       var style = {
         box: {
@@ -13944,17 +13944,17 @@ var Field = function (_React$Component) {
           width: cellSize + 'px',
           height: cellSize + 'px',
           boxSizing: 'border-box',
-          border: '1px solid #333'
+          border: '1px solid #333',
+          transition: 'all 0.5s'
         }
       };
-      var boxInfo = fieldInfo.boxInfo;
-      for (var i = 0, len = boxInfo.length; i < len; i++) {
+      for (var i = 0, len = boxInfoList.length; i < len; i++) {
         var currentStyle = {
-          backgroundColor: boxInfo[i].color,
-          left: boxInfo[i].position[0] * cellSize,
-          top: boxInfo[i].position[1] * cellSize
+          backgroundColor: boxInfoList[i].color,
+          left: boxInfoList[i].position[0] * cellSize,
+          top: boxInfoList[i].position[1] * cellSize
         };
-        boxes.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.box, currentStyle), key: i, onTouchStart: this.handleTouchStart.bind(this), onTouchEnd: this.handleTouchEnd.bind(this), 'data-boxid': boxInfo[i].id }));
+        boxes.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.box, currentStyle), key: i, onTouchStart: this.handleTouchStart.bind(this), onTouchEnd: this.handleTouchEnd.bind(this), 'data-boxid': boxInfoList[i].id }));
       }
       return boxes;
     }
@@ -13997,7 +13997,7 @@ var Field = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var matrix = this.createMatrix(this.props.fieldInfo);
+      var matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
       return _react2.default.createElement(
         'div',
         null,
@@ -14268,7 +14268,8 @@ var Play = function (_React$Component) {
 
     _this.state = {
       fieldInfo: null,
-      startPosition: [] };
+      boxInfo: null,
+      touchStart: [] };
     _this.moveBox = _this.moveBox.bind(_this);
     _this.touchStart = _this.touchStart.bind(_this);
     _this.touchEnd = _this.touchEnd.bind(_this);
@@ -14281,8 +14282,8 @@ var Play = function (_React$Component) {
       if (event.touches.length != 1) {
         return;
       }
-      this.state.startPosition[0] = event.touches[0].screenX;
-      this.state.startPosition[1] = event.touches[0].screenY;
+      this.state.touchStart[0] = event.touches[0].screenX;
+      this.state.touchStart[1] = event.touches[0].screenY;
       event.preventDefault();
     }
   }, {
@@ -14292,28 +14293,71 @@ var Play = function (_React$Component) {
       if (event.changedTouches.length != 1) {
         return;
       }
-      var deltaX = event.changedTouches[0].screenX - this.state.startPosition[0];
-      var deltaY = event.changedTouches[0].screenY - this.state.startPosition[1];
-      var direction = -1; // left:0, up:1, right:2, down:3
+      var deltaX = event.changedTouches[0].screenX - this.state.touchStart[0];
+      var deltaY = event.changedTouches[0].screenY - this.state.touchStart[1];
+      var direction = -1; // left:0, up:1, right:2, down:3, none: -1
       if (Math.abs(deltaX) > 3 * Math.abs(deltaY) && Math.abs(deltaX) > 30) {
         direction = deltaX > 0 ? 2 : 0;
       } else if (Math.abs(deltaY) > 3 * Math.abs(deltaX) && Math.abs(deltaY) > 30) {
         direction = deltaY > 0 ? 3 : 1;
       }
-      this.moveBox(id, direction);
+      if (direction != -1) {
+        this.moveBox(id, direction);
+      }
+      return;
     }
   }, {
     key: 'moveBox',
     value: function moveBox(boxId, direction) {
-      console.log('boxId: ', boxId);
-      console.log('direction: ', direction);
+      var currentBox = void 0;
+      if (this.state.fieldInfo == null) {
+        return;
+      }
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.state.fieldInfo.boxInfo[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var box = _step.value;
+
+          if (box.id == boxId) {
+            currentBox = box;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (direction == 2) {
+        var oldInfo = Object.assign(this.state.boxInfo);
+        if (oldInfo == null || oldInfo[boxId - 1] == null) {
+          return;
+        }
+        oldInfo[boxId - 1].position = [6, 2];
+        this.setState({
+          boxInfo: oldInfo
+        });
+      }
     }
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
       var currentFiled = _FieldList.FieldList[this.props.params.level - 1];
       this.setState({
-        fieldInfo: currentFiled
+        fieldInfo: currentFiled,
+        boxInfo: currentFiled.boxInfo
       });
     }
   }, {
@@ -14326,6 +14370,7 @@ var Play = function (_React$Component) {
         _react2.default.createElement(_Field2.default, {
           level: this.props.level,
           fieldInfo: this.state.fieldInfo,
+          boxInfoList: this.state.boxInfo,
           onTouchStart: this.touchStart,
           onTouchEnd: this.touchEnd
         })

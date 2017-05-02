@@ -13896,11 +13896,13 @@ var Field = function (_React$Component) {
       };
       var cells = this.createCells(fieldInfo, cellSize);
       var boxes = this.createBoxes(fieldInfo, cellSize);
+      var goals = this.createGoals(fieldInfo, cellSize);
       result.push(_react2.default.createElement(
         'div',
         { style: style.wrap, key: 0 },
         cells,
-        boxes
+        boxes,
+        goals
       ));
       return result;
     }
@@ -13947,7 +13949,6 @@ var Field = function (_React$Component) {
       };
       var boxInfo = fieldInfo.boxInfo;
       for (var i = 0, len = boxInfo.length; i < len; i++) {
-        boxInfo[i];
         var currentStyle = {
           backgroundColor: boxInfo[i].color,
           left: boxInfo[i].position[0] * cellSize,
@@ -13956,6 +13957,32 @@ var Field = function (_React$Component) {
         boxes.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.box, currentStyle), key: i }));
       }
       return boxes;
+    }
+  }, {
+    key: 'createGoals',
+    value: function createGoals(fieldInfo, cellSize) {
+      var goals = [];
+      var style = {
+        goal: {
+          position: 'absolute',
+          margin: 0,
+          width: cellSize / 2 + 'px',
+          height: cellSize / 2 + 'px',
+          boxSizing: 'border-box',
+          borderRadius: '50% 50%',
+          border: '1px solid #333'
+        }
+      };
+      var goalInfo = fieldInfo.goalInfo;
+      for (var i = 0, len = goalInfo.length; i < len; i++) {
+        var currentStyle = {
+          backgroundColor: goalInfo[i].color,
+          left: goalInfo[i].position[0] * cellSize + cellSize / 4,
+          top: goalInfo[i].position[1] * cellSize + cellSize / 4
+        };
+        goals.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.goal, currentStyle), key: i }));
+      }
+      return goals;
     }
   }, {
     key: 'render',
@@ -14409,23 +14436,28 @@ var Level1 = exports.Level1 = {
     color: '#f9a825',
     cleared: false
   }, {
-    id: 3,
+    id: 4,
     position: [1, 5],
     color: '#f9a825',
     cleared: false
   }],
   goalInfo: [{
     id: 1,
-    position: [6, 3],
+    position: [6, 2],
     color: '#f9a825',
     cleared: false
   }, {
     id: 2,
-    position: [6, 4],
+    position: [6, 3],
     color: '#f9a825',
     cleared: false
   }, {
     id: 3,
+    position: [6, 4],
+    color: '#f9a825',
+    cleared: false
+  }, {
+    id: 4,
     position: [6, 5],
     color: '#f9a825',
     cleared: false

@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import type { FieldInfo, BoxInfo } from '../Types';
+import type { FieldInfo, BoxInfo, GoalInfo } from '../Types';
 import { m } from '../utils';
 
 export default class Field extends React.Component {
@@ -26,8 +26,9 @@ export default class Field extends React.Component {
     };
     const cells = this.createCells(fieldInfo, cellSize);
     const boxes = this.createBoxes(fieldInfo, cellSize);
+    const goals = this.createGoals(fieldInfo, cellSize);
     result.push(
-      <div style={style.wrap} key={0}>{cells}{boxes}</div>
+      <div style={style.wrap} key={0}>{cells}{boxes}{goals}</div>
     );
     return result;
   }
@@ -56,7 +57,7 @@ export default class Field extends React.Component {
     }
     return cells;
   }
-  createBoxes(fieldInfo: FieldInfo, cellSize: number) {
+  createBoxes(fieldInfo: FieldInfo, cellSize: number): Array<React.Element<*>> {
     let boxes = [];
     const style = {
       box: {
@@ -70,7 +71,6 @@ export default class Field extends React.Component {
     };
     const boxInfo: Array<BoxInfo> = fieldInfo.boxInfo;
     for (let i = 0, len = boxInfo.length; i < len; i++) {
-      boxInfo[i];
       const currentStyle = {
         backgroundColor: boxInfo[i].color,
         left: boxInfo[i].position[0] * cellSize,
@@ -79,6 +79,30 @@ export default class Field extends React.Component {
       boxes.push(<div style={m(style.box, currentStyle)} key={i}></div>);
     }
     return boxes;
+  }
+  createGoals(fieldInfo: FieldInfo, cellSize: number) {
+    let goals = [];
+    const style = {
+      goal: {
+        position: 'absolute',
+        margin: 0,
+        width: cellSize / 2 + 'px',
+        height: cellSize / 2 + 'px',
+        boxSizing: 'border-box',
+        borderRadius: '50% 50%',
+        border: '1px solid #333',
+      },
+    };
+    const goalInfo: Array<GoalInfo> = fieldInfo.goalInfo;
+    for (let i = 0, len = goalInfo.length; i < len; i++) {
+      const currentStyle = {
+        backgroundColor: goalInfo[i].color,
+        left: goalInfo[i].position[0] * cellSize + cellSize / 4,
+        top: goalInfo[i].position[1] * cellSize + cellSize / 4,
+      };
+      goals.push(<div style={m(style.goal, currentStyle)} key={i}></div>);
+    }
+    return goals;
   }
   render() {
     const matrix = this.createMatrix(this.props.fieldInfo);

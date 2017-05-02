@@ -33,7 +33,7 @@ export const Level1: FieldInfo = {
       cleared: false,
     },
     {
-      id: 3,
+      id: 4,
       position: [1, 5],
       color: '#f9a825',
       cleared: false,
@@ -42,18 +42,24 @@ export const Level1: FieldInfo = {
   goalInfo: [
     {
       id: 1,
-      position: [6, 3],
+      position: [6, 2],
       color: '#f9a825',
       cleared: false,
     },
     {
       id: 2,
-      position: [6, 4],
+      position: [6, 3],
       color: '#f9a825',
       cleared: false,
     },
     {
       id: 3,
+      position: [6, 4],
+      color: '#f9a825',
+      cleared: false,
+    },
+    {
+      id: 4,
       position: [6, 5],
       color: '#f9a825',
       cleared: false,

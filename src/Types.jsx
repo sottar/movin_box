@@ -16,7 +16,7 @@ export type GoalInfo = {
 
 export type FieldInfo = {
   matrix: Array<number>; // [Horizontal, Vertical]
-  availablePositions: Array<Array<number>>; // 1 is enable to moving
+  blockPosition: Array<Array<number>>; // 1 is enable to moving
   boxInfo: Array<BoxInfo>;
   goalInfo: Array<GoalInfo>;
 }

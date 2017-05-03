@@ -13922,9 +13922,9 @@ var Field = function (_React$Component) {
         }
       };
       var cells = [];
-      for (var v = 0, vlen = fieldInfo.availablePositions.length; v < vlen; v++) {
-        for (var h = 0, hlen = fieldInfo.availablePositions[v].length; h < hlen; h++) {
-          if (fieldInfo.availablePositions[v][h] == 0) {
+      for (var v = 0, vlen = fieldInfo.blockPosition.length; v < vlen; v++) {
+        for (var h = 0, hlen = fieldInfo.blockPosition[v].length; h < hlen; h++) {
+          if (fieldInfo.blockPosition[v][h] == 1) {
             cells.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.cells, style.blockCell), key: v + ',' + h }));
           } else {
             cells.push(_react2.default.createElement('div', { style: style.cells, key: v + ',' + h }));
@@ -14512,7 +14512,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 var Level1 = exports.Level1 = {
   matrix: [8, 8], // [Horizontal, Vertical]
-  availablePositions: [[1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 0, 0, 0, 0, 0, 1], [0, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1, 1, 0], [1, 1, 0, 0, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 1, 1]],
+  blockPosition: [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 0], [1, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0, 0, 1], [0, 0, 1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
   boxInfo: [{
     id: 1,
     position: [1, 2],

@@ -46,9 +46,9 @@ export default class Field extends React.Component {
       },
     };
     let cells = [];
-    for (let v = 0, vlen = fieldInfo.availablePositions.length; v < vlen; v++) {
-      for (let h = 0, hlen = fieldInfo.availablePositions[v].length; h < hlen; h++) {
-        if (fieldInfo.availablePositions[v][h] == 0) {
+    for (let v = 0, vlen = fieldInfo.blockPosition.length; v < vlen; v++) {
+      for (let h = 0, hlen = fieldInfo.blockPosition[v].length; h < hlen; h++) {
+        if (fieldInfo.blockPosition[v][h] == 1) {
           cells.push(<div style={m(style.cells, style.blockCell)} key={v + ',' + h}></div>);
         } else {
           cells.push(<div style={style.cells} key={v + ',' + h}></div>);

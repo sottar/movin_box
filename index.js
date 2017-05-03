@@ -14269,6 +14269,7 @@ var Play = function (_React$Component) {
     _this.state = {
       fieldInfo: null,
       boxInfo: null,
+      availableZone: null,
       touchStart: [] };
     _this.moveBox = _this.moveBox.bind(_this);
     _this.touchStart = _this.touchStart.bind(_this);
@@ -14340,24 +14341,69 @@ var Play = function (_React$Component) {
         }
       }
 
+      var oldBoxPosition = currentBox.position;
+      var oldBoxInfo = Object.assign(this.state.boxInfo);
       if (direction == 2) {
-        var oldInfo = Object.assign(this.state.boxInfo);
-        if (oldInfo == null || oldInfo[boxId - 1] == null) {
+        if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
           return;
         }
-        oldInfo[boxId - 1].position = [6, 2];
-        this.setState({
-          boxInfo: oldInfo
-        });
+        var searcher = this.state.availableZone[oldBoxPosition[1]];
+        var count = 0;
+        for (var i = oldBoxPosition[0] + 1; i < searcher.length; i++) {
+          if (searcher[i] == 0) {
+            count++;
+          }
+        }
+        oldBoxInfo[boxId - 1].position[0] += count;
       }
+      var newavailableZone = this.updateAvailableZone(oldBoxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
+      this.setState({
+        boxInfo: oldBoxInfo,
+        availableZone: newavailableZone
+      });
+    }
+  }, {
+    key: 'updateAvailableZone',
+    value: function updateAvailableZone(boxInfo, blockPosition) {
+      var newAvailbleZone = blockPosition;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = boxInfo[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var box = _step2.value;
+
+          var x = box.position[0];
+          var y = box.position[1];
+          newAvailbleZone[y][x] = 1;
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return newAvailbleZone;
     }
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var currentFiled = _FieldList.FieldList[this.props.params.level - 1];
+      var currentFiled = JSON.parse(JSON.stringify(_FieldList.FieldList))[this.props.params.level - 1];
+      var newAvailableZone = this.updateAvailableZone(currentFiled.boxInfo, JSON.parse(JSON.stringify(_FieldList.FieldList[this.props.params.level - 1].blockPosition)));
       this.setState({
         fieldInfo: currentFiled,
-        boxInfo: currentFiled.boxInfo
+        boxInfo: currentFiled.boxInfo,
+        availableZone: newAvailableZone
       });
     }
   }, {

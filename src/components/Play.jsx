@@ -9,6 +9,7 @@ export default class Play extends React.Component {
   state: {
     fieldInfo: ?FieldInfo;
     boxInfo: ?Array<BoxInfo>;
+    availableZone: ?Array<Array<number>>;
     touchStart: Array<number>;
   }
   constructor(props: any) {
@@ -16,6 +17,7 @@ export default class Play extends React.Component {
     this.state = {
       fieldInfo: null,
       boxInfo: null,
+      availableZone: null,
       touchStart: [], // [horizontal axis, vertical axis]
     };
     this.moveBox = this.moveBox.bind(this);
@@ -58,22 +60,45 @@ export default class Play extends React.Component {
         currentBox = box;
       }
     }
+    const oldBoxPosition = currentBox.position;
+    let oldBoxInfo = Object.assign(this.state.boxInfo);
     if (direction == 2) {
-      let oldInfo = Object.assign(this.state.boxInfo);
-      if (oldInfo == null || oldInfo[boxId - 1] == null) {
+      if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
         return;
       }
-      oldInfo[boxId - 1].position = [6,2];
-      this.setState({
-        boxInfo: oldInfo,
-      });
+      const searcher = this.state.availableZone[oldBoxPosition[1]];
+      let count = 0;
+      for (let i = oldBoxPosition[0] + 1; i < searcher.length; i++) {
+        if (searcher[i] == 0) {
+          count++;
+        }
+      }
+      oldBoxInfo[boxId - 1].position[0] += count;
     }
+    let newavailableZone =this.updateAvailableZone(oldBoxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
+    this.setState({
+      boxInfo: oldBoxInfo,
+      availableZone: newavailableZone,
+    });
+  }
+  updateAvailableZone(boxInfo, blockPosition) {
+    let newAvailbleZone = blockPosition;
+    for (const box of boxInfo) {
+      const x = box.position[0];
+      const y = box.position[1];
+      newAvailbleZone[y][x] = 1;
+    }
+    return newAvailbleZone;
   }
   componentWillMount() {
-    const currentFiled: FieldInfo = FieldList[this.props.params.level - 1];
+    const currentFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
+    const newAvailableZone = this.updateAvailableZone(
+            currentFiled.boxInfo,
+            JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition)));
     this.setState({
       fieldInfo: currentFiled,
       boxInfo: currentFiled.boxInfo,
+      availableZone: newAvailableZone,
     });
   }
   render() {

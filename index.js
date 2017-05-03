@@ -14267,9 +14267,14 @@ var Play = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Play.__proto__ || Object.getPrototypeOf(Play)).call(this, props));
 
     _this.state = {
-      fieldInfo: null,
-      boxInfo: null,
-      availableZone: null,
+      fieldInfo: {
+        matrix: [],
+        blockPosition: [],
+        boxInfo: [],
+        goalInfo: []
+      },
+      boxInfo: [],
+      availableZone: [],
       touchStart: [] };
     _this.moveBox = _this.moveBox.bind(_this);
     _this.touchStart = _this.touchStart.bind(_this);
@@ -14318,9 +14323,6 @@ var Play = function (_React$Component) {
     key: 'moveBox',
     value: function moveBox(boxId, direction) {
       var currentBox = void 0;
-      if (this.state.fieldInfo == null) {
-        return;
-      }
       var boxInfo = this.state.boxInfo;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -14349,6 +14351,9 @@ var Play = function (_React$Component) {
         }
       }
 
+      if (currentBox == undefined) {
+        return;
+      }
       var newBoxInfo = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
       var newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
       this.setState({
@@ -14364,9 +14369,6 @@ var Play = function (_React$Component) {
   }, {
     key: 'getNewBoxInfo',
     value: function getNewBoxInfo(availableZone, oldBoxInfo, oldBoxPosition, direction, boxId) {
-      if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
-        return;
-      }
       var newBoxInfo = Object.assign(oldBoxInfo);
       if (direction == 0) {
         // left
@@ -14415,23 +14417,19 @@ var Play = function (_React$Component) {
         }
         newBoxInfo[boxId - 1].position[1] += _count3;
       }
-      return newBoxInfo;
-    }
-  }, {
-    key: 'updateAvailableZone',
-    value: function updateAvailableZone(boxInfo, blockPosition) {
-      var newAvailbleZone = blockPosition;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = boxInfo[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var box = _step2.value;
+        for (var _iterator2 = this.state.fieldInfo.goalInfo[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var goal = _step2.value;
 
-          var x = box.position[0];
-          var y = box.position[1];
-          newAvailbleZone[y][x] = 1;
+          if (newBoxInfo[boxId - 1].position[0] == goal.position[0] && newBoxInfo[boxId - 1].position[1] == goal.position[1]) {
+            newBoxInfo[boxId - 1].cleared = true;
+            break;
+          }
+          newBoxInfo[boxId - 1].cleared = false;
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -14444,6 +14442,39 @@ var Play = function (_React$Component) {
         } finally {
           if (_didIteratorError2) {
             throw _iteratorError2;
+          }
+        }
+      }
+
+      return newBoxInfo;
+    }
+  }, {
+    key: 'updateAvailableZone',
+    value: function updateAvailableZone(boxInfo, blockPosition) {
+      var newAvailbleZone = blockPosition;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = boxInfo[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var box = _step3.value;
+
+          var x = box.position[0];
+          var y = box.position[1];
+          newAvailbleZone[y][x] = 1;
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }

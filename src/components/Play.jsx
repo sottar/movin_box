@@ -7,17 +7,22 @@ import { FieldList } from './FieldList';
 
 export default class Play extends React.Component {
   state: {
-    fieldInfo: ?FieldInfo;
-    boxInfo: ?Array<BoxInfo>;
-    availableZone: ?Array<Array<number>>;
+    fieldInfo: FieldInfo;
+    boxInfo: Array<BoxInfo>;
+    availableZone: Array<Array<number>>;
     touchStart: Array<number>;
   }
   constructor(props: any) {
     super(props);
     this.state = {
-      fieldInfo: null,
-      boxInfo: null,
-      availableZone: null,
+      fieldInfo: {
+        matrix: [],
+        blockPosition: [],
+        boxInfo: [],
+        goalInfo: [],
+      },
+      boxInfo: [],
+      availableZone: [],
       touchStart: [], // [horizontal axis, vertical axis]
     };
     this.moveBox = this.moveBox.bind(this);
@@ -60,16 +65,16 @@ export default class Play extends React.Component {
    */
   moveBox(boxId: number, direction: number): void {
     let currentBox: BoxInfo;
-    if (this.state.fieldInfo == null) {
-      return;
-    }
     const boxInfo = this.state.boxInfo;
     for (let box of boxInfo) {
       if (box.id == boxId) {
         currentBox = box;
       }
     }
-    const newBoxInfo = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
+    if (currentBox == undefined) {
+      return;
+    }
+    const newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
     const newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
     this.setState({
       boxInfo: newBoxInfo,
@@ -80,10 +85,7 @@ export default class Play extends React.Component {
   /**
    * get moved box infomation
    */
-  getNewBoxInfo(availableZone, oldBoxInfo: BoxInfo, oldBoxPosition, direction: number, boxId: number): BoxInfo {
-    if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
-      return;
-    }
+  getNewBoxInfo(availableZone: Array<Array<number>>, oldBoxInfo: Array<BoxInfo>, oldBoxPosition: Array<number>, direction: number, boxId: number): Array<BoxInfo> {
     let newBoxInfo = Object.assign(oldBoxInfo);
     if (direction == 0) { // left
       const searcherTarget = availableZone[oldBoxPosition[1]];
@@ -128,10 +130,17 @@ export default class Play extends React.Component {
       }
       newBoxInfo[boxId - 1].position[1] += count;
     }
+    for (let goal of this.state.fieldInfo.goalInfo) {
+      if (newBoxInfo[boxId - 1].position[0] == goal.position[0] && newBoxInfo[boxId - 1].position[1] == goal.position[1]) {
+        newBoxInfo[boxId - 1].cleared = true;
+        break;
+      }
+      newBoxInfo[boxId - 1].cleared = false;
+    }
     return newBoxInfo;
   }
 
-  updateAvailableZone(boxInfo: BoxInfo, blockPosition: Array<Array<number>>): Array<Array<number>> {
+  updateAvailableZone(boxInfo: Array<BoxInfo>, blockPosition: Array<Array<number>>): Array<Array<number>> {
     let newAvailbleZone = blockPosition;
     for (const box of boxInfo) {
       const x = box.position[0];

@@ -14274,6 +14274,8 @@ var Play = function (_React$Component) {
     _this.moveBox = _this.moveBox.bind(_this);
     _this.touchStart = _this.touchStart.bind(_this);
     _this.touchEnd = _this.touchEnd.bind(_this);
+    _this.getNewBoxInfo = _this.getNewBoxInfo.bind(_this);
+    _this.updateAvailableZone = _this.updateAvailableZone.bind(_this);
     return _this;
   }
 
@@ -14307,6 +14309,11 @@ var Play = function (_React$Component) {
       }
       return;
     }
+
+    /**
+     * move box and set new state
+     */
+
   }, {
     key: 'moveBox',
     value: function moveBox(boxId, direction) {
@@ -14314,12 +14321,13 @@ var Play = function (_React$Component) {
       if (this.state.fieldInfo == null) {
         return;
       }
+      var boxInfo = this.state.boxInfo;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.state.fieldInfo.boxInfo[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = boxInfo[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var box = _step.value;
 
           if (box.id == boxId) {
@@ -14341,26 +14349,73 @@ var Play = function (_React$Component) {
         }
       }
 
-      var oldBoxPosition = currentBox.position;
-      var oldBoxInfo = Object.assign(this.state.boxInfo);
-      if (direction == 2) {
-        if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
-          return;
-        }
-        var searcher = this.state.availableZone[oldBoxPosition[1]];
-        var count = 0;
-        for (var i = oldBoxPosition[0] + 1; i < searcher.length; i++) {
-          if (searcher[i] == 0) {
-            count++;
-          }
-        }
-        oldBoxInfo[boxId - 1].position[0] += count;
-      }
-      var newavailableZone = this.updateAvailableZone(oldBoxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
+      var newBoxInfo = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
+      var newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
       this.setState({
-        boxInfo: oldBoxInfo,
+        boxInfo: newBoxInfo,
         availableZone: newavailableZone
       });
+    }
+
+    /**
+     * get moved box infomation
+     */
+
+  }, {
+    key: 'getNewBoxInfo',
+    value: function getNewBoxInfo(availableZone, oldBoxInfo, oldBoxPosition, direction, boxId) {
+      if (oldBoxInfo == null || oldBoxInfo[boxId - 1] == null) {
+        return;
+      }
+      var newBoxInfo = Object.assign(oldBoxInfo);
+      if (direction == 0) {
+        // left
+        var searcherTarget = availableZone[oldBoxPosition[1]];
+        var count = 0;
+        for (var i = oldBoxPosition[0] - 1; i >= 0; i--) {
+          if (searcherTarget[i] == 0) {
+            count++;
+          } else {
+            break;
+          }
+        }
+        newBoxInfo[boxId - 1].position[0] -= count;
+      } else if (direction == 1) {
+        // up
+        var _count = 0;
+        for (var _i = oldBoxPosition[1] - 1; _i >= 0; _i--) {
+          if (availableZone[_i][oldBoxPosition[0]] == 0) {
+            _count++;
+          } else {
+            break;
+          }
+        }
+        newBoxInfo[boxId - 1].position[1] -= _count;
+      } else if (direction == 2) {
+        // right
+        var _searcherTarget = availableZone[oldBoxPosition[1]];
+        var _count2 = 0;
+        for (var _i2 = oldBoxPosition[0] + 1, len = _searcherTarget.length; _i2 < len; _i2++) {
+          if (_searcherTarget[_i2] == 0) {
+            _count2++;
+          } else {
+            break;
+          }
+        }
+        newBoxInfo[boxId - 1].position[0] += _count2;
+      } else if (direction == 3) {
+        // down
+        var _count3 = 0;
+        for (var _i3 = oldBoxPosition[1] + 1, _len = availableZone.length; _i3 < _len; _i3++) {
+          if (availableZone[_i3][oldBoxPosition[0]] == 0) {
+            _count3++;
+          } else {
+            break;
+          }
+        }
+        newBoxInfo[boxId - 1].position[1] += _count3;
+      }
+      return newBoxInfo;
     }
   }, {
     key: 'updateAvailableZone',

@@ -80,6 +80,9 @@ export default class Play extends React.Component {
       boxInfo: newBoxInfo,
       availableZone: newavailableZone,
     });
+    if (this.isCleared(newBoxInfo)) {
+      this.props.router.push('/clear/' + this.props.params.level);
+    }
   }
 
   /**
@@ -148,6 +151,18 @@ export default class Play extends React.Component {
       newAvailbleZone[y][x] = 1;
     }
     return newAvailbleZone;
+  }
+
+  /**
+   * check clear the game
+   */
+  isCleared(boxInfo: Array<BoxInfo>): boolean {
+    for (const box of boxInfo) {
+      if (box.cleared != true) {
+        return false;
+      }
+    }
+    return true;
   }
 
   componentWillMount() {

@@ -7,6 +7,7 @@ import App from './components/App';
 import Top from './components/Top';
 import List from './components/List';
 import Play from './components/Play';
+import Clear from './components/Clear';
 
 const store = configureStore();
 
@@ -19,6 +20,7 @@ export default class Root extends React.Component {
             <IndexRoute component={Top} />
             <Route path="/list" component={List} />
             <Route path="/play/:level" component={Play} />
+            <Route path="/clear/:level" component={Clear} />
           </Route>
         </Router>
       </Provider>

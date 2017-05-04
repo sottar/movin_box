@@ -13734,6 +13734,10 @@ var _Play = __webpack_require__(136);
 
 var _Play2 = _interopRequireDefault(_Play);
 
+var _Clear = __webpack_require__(291);
+
+var _Clear2 = _interopRequireDefault(_Clear);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -13767,7 +13771,8 @@ var Root = function (_React$Component) {
             { path: '/', component: _App2.default },
             _react2.default.createElement(_reactRouter.IndexRoute, { component: _Top2.default }),
             _react2.default.createElement(_reactRouter.Route, { path: '/list', component: _List2.default }),
-            _react2.default.createElement(_reactRouter.Route, { path: '/play/:level', component: _Play2.default })
+            _react2.default.createElement(_reactRouter.Route, { path: '/play/:level', component: _Play2.default }),
+            _react2.default.createElement(_reactRouter.Route, { path: '/clear/:level', component: _Clear2.default })
           )
         )
       );
@@ -14360,6 +14365,9 @@ var Play = function (_React$Component) {
         boxInfo: newBoxInfo,
         availableZone: newavailableZone
       });
+      if (this.isCleared(newBoxInfo)) {
+        this.props.router.push('/clear/' + this.props.params.level);
+      }
     }
 
     /**
@@ -14480,6 +14488,43 @@ var Play = function (_React$Component) {
       }
 
       return newAvailbleZone;
+    }
+
+    /**
+     * check clear the game
+     */
+
+  }, {
+    key: 'isCleared',
+    value: function isCleared(boxInfo) {
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = boxInfo[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var box = _step4.value;
+
+          if (box.cleared != true) {
+            return false;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return true;
     }
   }, {
     key: 'componentWillMount',
@@ -30844,6 +30889,157 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 291 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(71);
+
+var _Header = __webpack_require__(75);
+
+var _Header2 = _interopRequireDefault(_Header);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Clear = function (_React$Component) {
+  _inherits(Clear, _React$Component);
+
+  function Clear() {
+    _classCallCheck(this, Clear);
+
+    return _possibleConstructorReturn(this, (Clear.__proto__ || Object.getPrototypeOf(Clear)).apply(this, arguments));
+  }
+
+  _createClass(Clear, [{
+    key: 'render',
+    value: function render() {
+      var nextPlay = '/play' + this.props.params.level;
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_Header2.default, null),
+        _react2.default.createElement(
+          'h2',
+          { style: style.clear },
+          'Clear !!'
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: style.next },
+          _react2.default.createElement(
+            _reactRouter.Link,
+            { to: nextPlay, style: style.nextLink },
+            'next'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: style.wrap },
+          _react2.default.createElement(
+            'div',
+            { style: style.home },
+            _react2.default.createElement(
+              _reactRouter.Link,
+              { to: '/', style: style.homeLink },
+              'home'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { style: style.share },
+            'share'
+          )
+        )
+      );
+    }
+  }]);
+
+  return Clear;
+}(_react2.default.Component);
+
+exports.default = Clear;
+
+
+var style = {
+  clear: {
+    marginTop: '150px',
+    fontSize: '44px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#ffab00'
+  },
+  next: {
+    textAlign: 'center'
+  },
+  nextLink: {
+    display: 'inline-block',
+    padding: '10px 0',
+    width: '70%',
+    border: '3px solid #4fc3f7',
+    borderRadius: '10px',
+    color: '#4fc3f7',
+    fontSize: '30px',
+    fontWeight: 'bold',
+    textDecoration: 'none',
+    backgroundColor: '#fefefe'
+  },
+  wrap: {
+    margin: '20px auto 0',
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '70%'
+  },
+  home: {
+    width: '47%',
+    textAlign: 'center'
+  },
+  homeLink: {
+    display: 'inline-block',
+    padding: '10px 0',
+    width: '100%',
+    border: '2px solid #a5d6a7',
+    borderRadius: '10px',
+    color: '#a5d6a7',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    textDecoration: 'none',
+    boxSizing: 'border-box',
+    backgroundColor: '#fefefe'
+  },
+  share: {
+    display: 'inline-block',
+    padding: '10px 0',
+    width: '47%',
+    border: '2px solid #f48fb1',
+    borderRadius: '10px',
+    color: '#f48fb1',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    backgroundColor: '#fefefe'
+  }
+};
 
 /***/ })
 /******/ ]);

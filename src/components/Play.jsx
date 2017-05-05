@@ -81,6 +81,8 @@ export default class Play extends React.Component {
       availableZone: newavailableZone,
     });
     if (this.isCleared(newBoxInfo)) {
+      this.props.addClearedLevel(Number(this.props.params.level));
+      this.props.addOpenedLevel(Number(this.props.params.level) + 1);
       this.props.router.push('/clear/' + this.props.params.level);
     }
   }

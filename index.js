@@ -13822,19 +13822,50 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.state = {
+      clearedLevels: [],
+      openedLevels: [1]
+    };
+    _this.addClearedLevel = _this.addClearedLevel.bind(_this);
+    _this.addOpenedLevel = _this.addOpenedLevel.bind(_this);
+    return _this;
   }
 
   _createClass(App, [{
+    key: 'addClearedLevel',
+    value: function addClearedLevel(addLevel) {
+      var clearedLevels = this.state.clearedLevels;
+      clearedLevels.push(addLevel);
+      this.setState({
+        clearedLevels: clearedLevels
+      });
+    }
+  }, {
+    key: 'addOpenedLevel',
+    value: function addOpenedLevel(addLevel) {
+      var openedLevels = this.state.openedLevels;
+      openedLevels.push(addLevel);
+      this.setState({
+        openedLevels: openedLevels
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
         null,
-        this.props.children
+        this.props.children && _react2.default.cloneElement(this.props.children, {
+          clearedLevels: this.state.clearedLevels,
+          openedLevels: this.state.openedLevels,
+          addClearedLevel: this.addClearedLevel,
+          addOpenedLevel: this.addOpenedLevel
+        })
       );
     }
   }]);
@@ -14208,16 +14239,14 @@ var List = function (_React$Component) {
     key: 'render',
     value: function render() {
       var levelPerPages = 32;
-      var clearedLevels = [1, 2, 3, 4, 5];
-      var openedLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
       return _react2.default.createElement(
         'div',
         null,
         _react2.default.createElement(_Header2.default, null),
         _react2.default.createElement(_LevelList2.default, {
           levelPerPages: levelPerPages,
-          clearedLevels: clearedLevels,
-          openedLevels: openedLevels
+          clearedLevels: this.props.clearedLevels,
+          openedLevels: this.props.openedLevels
         })
       );
     }
@@ -14366,6 +14395,8 @@ var Play = function (_React$Component) {
         availableZone: newavailableZone
       });
       if (this.isCleared(newBoxInfo)) {
+        this.props.addClearedLevel(Number(this.props.params.level));
+        this.props.addOpenedLevel(Number(this.props.params.level) + 1);
         this.props.router.push('/clear/' + this.props.params.level);
       }
     }
@@ -30933,7 +30964,7 @@ var Clear = function (_React$Component) {
   _createClass(Clear, [{
     key: 'render',
     value: function render() {
-      var nextPlay = '/play' + this.props.params.level;
+      var nextPlay = '/play/' + (Number(this.props.params.level) + 1);
       return _react2.default.createElement(
         'div',
         null,

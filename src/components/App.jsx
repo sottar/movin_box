@@ -1,5 +1,6 @@
 /* @flow */
 import React from 'react';
+import Storage from '../Storage';
 
 export default class App extends React.Component {
   state: {
@@ -29,15 +30,40 @@ export default class App extends React.Component {
       openedLevels: openedLevels,
     });
   }
+  componentWillMount() {
+    const storage = new Storage();
+    const clearedLevelsStr = storage.getLocalStorage('clearedLevels');
+    const openedLevelsStr = storage.getLocalStorage('openedLevels');
+    if (clearedLevelsStr == null || openedLevelsStr == null) {
+      return;
+    }
+    let clearedLevelsArray = [];
+    let openedLevelsArray = [];
+    for (const cl of clearedLevelsStr) {
+      clearedLevelsArray.push(Number(cl));
+    }
+    for (const ol of openedLevelsStr) {
+      openedLevelsArray.push(Number(ol));
+    }
+    this.setState({
+      clearedLevels: clearedLevelsArray,
+      openedLevels: openedLevelsArray,
+    });
+  }
+  componentWillUpdate(nextProps: Object, nextState: Object) {
+    const storage = new Storage();
+    storage.saveLocalStorage('clearedLevels', nextState.clearedLevels.toString());
+    storage.saveLocalStorage('openedLevels', nextState.openedLevels.toString());
+  }
   render() {
     return (
       <div>
-          {this.props.children && React.cloneElement(this.props.children, {
-            clearedLevels: this.state.clearedLevels,
-            openedLevels: this.state.openedLevels,
-            addClearedLevel: this.addClearedLevel,
-            addOpenedLevel: this.addOpenedLevel,
-          })}
+        {this.props.children && React.cloneElement(this.props.children, {
+          clearedLevels: this.state.clearedLevels,
+          openedLevels: this.state.openedLevels,
+          addClearedLevel: this.addClearedLevel,
+          addOpenedLevel: this.addOpenedLevel,
+        })}
       </div>
     );
   }

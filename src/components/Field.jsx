@@ -21,7 +21,7 @@ export default class Field extends React.Component {
         position: 'relative',
         display: 'flex',
         flexWrap: 'wrap',
-        margin: '100px auto 0',
+        margin: '50px auto 0',
         width: horizontal * cellSize,
         height: vertical * cellSize,
         border: '2px solid #333',
@@ -121,6 +121,27 @@ export default class Field extends React.Component {
     return goals;
   }
 
+  /**
+   * make button list
+   */
+  createButton(oldBoxInfoList: Array<BoxInfo>, newBoxInfoList: Array<BoxInfo>) {
+    // If it can't return, apply the disable style to the button
+    if (oldBoxInfoList == newBoxInfoList) {
+      return(
+        <div style={style.buttonArea}>
+          <div style={style.button} onClick={this.props.resetField}>reset</div>
+          <div style={m(style.button, style.disableButton)} onClick={this.props.undoField}>undo</div>
+        </div>
+      );
+    }
+    return(
+      <div style={style.buttonArea}>
+        <div style={style.button} onClick={this.props.resetField}>reset</div>
+        <div style={style.button} onClick={this.props.undoField}>undo</div>
+      </div>
+    );
+  }
+
   handleTouchStart(e: any): void {
     this.props.onTouchStart(e);
   }
@@ -131,10 +152,35 @@ export default class Field extends React.Component {
 
   render() {
     const matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
+    const buttons = this.createButton(this.props.oldBoxInfoList, this.props.boxInfoList);
     return (
       <div>
         {matrix}
+        {buttons}
       </div>
     );
   }
 }
+
+const style = {
+  buttonArea: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '40px auto 50px',
+    width: '85%',
+  },
+  button: {
+    width: '44%',
+    border: '3px solid',
+    borderRadius: '22px',
+    color: '#4fc3f7',
+    textAlign: 'center',
+    lineHeight: '44px',
+    fontWeight: 'bold',
+    background: '#fefefe',
+  },
+  disableButton: {
+    opacity: '0.8',
+    background: '#efefef',
+  },
+};

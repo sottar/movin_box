@@ -14245,7 +14245,7 @@ var Field = function (_React$Component) {
           position: 'relative',
           display: 'flex',
           flexWrap: 'wrap',
-          margin: '100px auto 0',
+          margin: '50px auto 0',
           width: horizontal * cellSize,
           height: vertical * cellSize,
           border: '2px solid #333',
@@ -14357,6 +14357,45 @@ var Field = function (_React$Component) {
       }
       return goals;
     }
+
+    /**
+     * make button list
+     */
+
+  }, {
+    key: 'createButton',
+    value: function createButton(oldBoxInfoList, newBoxInfoList) {
+      if (oldBoxInfoList == newBoxInfoList) {
+        return _react2.default.createElement(
+          'div',
+          { style: style.buttonArea },
+          _react2.default.createElement(
+            'div',
+            { style: style.button, onClick: this.props.resetField },
+            'reset'
+          ),
+          _react2.default.createElement(
+            'div',
+            { style: (0, _utils.m)(style.button, style.disableButton), onClick: this.props.undoField },
+            'undo'
+          )
+        );
+      }
+      return _react2.default.createElement(
+        'div',
+        { style: style.buttonArea },
+        _react2.default.createElement(
+          'div',
+          { style: style.button, onClick: this.props.resetField },
+          'reset'
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: style.button, onClick: this.props.undoField },
+          'undo'
+        )
+      );
+    }
   }, {
     key: 'handleTouchStart',
     value: function handleTouchStart(e) {
@@ -14371,10 +14410,12 @@ var Field = function (_React$Component) {
     key: 'render',
     value: function render() {
       var matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
+      var buttons = this.createButton(this.props.oldBoxInfoList, this.props.boxInfoList);
       return _react2.default.createElement(
         'div',
         null,
-        matrix
+        matrix,
+        buttons
       );
     }
   }]);
@@ -14383,6 +14424,30 @@ var Field = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Field;
+
+
+var style = {
+  buttonArea: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '40px auto 50px',
+    width: '85%'
+  },
+  button: {
+    width: '44%',
+    border: '3px solid',
+    borderRadius: '22px',
+    color: '#4fc3f7',
+    textAlign: 'center',
+    lineHeight: '44px',
+    fontWeight: 'bold',
+    background: '#fefefe'
+  },
+  disableButton: {
+    opacity: '0.8',
+    background: '#efefef'
+  }
+};
 
 /***/ }),
 /* 136 */
@@ -14659,6 +14724,7 @@ var Play = function (_React$Component) {
         goalInfo: []
       },
       boxInfo: [],
+      oldBoxInfo: [],
       availableZone: [],
       touchStart: [] };
     _this.moveBox = _this.moveBox.bind(_this);
@@ -14666,6 +14732,9 @@ var Play = function (_React$Component) {
     _this.touchEnd = _this.touchEnd.bind(_this);
     _this.getNewBoxInfo = _this.getNewBoxInfo.bind(_this);
     _this.updateAvailableZone = _this.updateAvailableZone.bind(_this);
+    _this.backToListPage = _this.backToListPage.bind(_this);
+    _this.resetField = _this.resetField.bind(_this);
+    _this.undoField = _this.undoField.bind(_this);
     return _this;
   }
 
@@ -14739,10 +14808,12 @@ var Play = function (_React$Component) {
       if (currentBox == undefined) {
         return;
       }
-      var newBoxInfo = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
+      var oldBoxInfo = JSON.parse(JSON.stringify(boxInfo));
+      var newBoxInfo = this.getNewBoxInfo(this.state.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
       var newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
       this.setState({
         boxInfo: newBoxInfo,
+        oldBoxInfo: this.state.boxInfo,
         availableZone: newavailableZone
       });
       if (this.isCleared(newBoxInfo)) {
@@ -14911,6 +14982,32 @@ var Play = function (_React$Component) {
 
       return true;
     }
+
+    /**
+     * reset current game
+     */
+
+  }, {
+    key: 'resetField',
+    value: function resetField() {
+      var initFiled = JSON.parse(JSON.stringify(_FieldList.FieldList))[this.props.params.level - 1];
+      this.setState({
+        fieldInfo: initFiled,
+        boxInfo: initFiled.boxInfo
+      });
+    }
+
+    /**
+     * undo the previous action
+     */
+
+  }, {
+    key: 'undoField',
+    value: function undoField() {
+      this.setState({
+        boxInfo: this.state.oldBoxInfo
+      });
+    }
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
@@ -14919,6 +15016,7 @@ var Play = function (_React$Component) {
       this.setState({
         fieldInfo: currentFiled,
         boxInfo: currentFiled.boxInfo,
+        oldBoxInfo: currentFiled.boxInfo,
         availableZone: newAvailableZone
       });
     }
@@ -14933,8 +15031,11 @@ var Play = function (_React$Component) {
           level: this.props.level,
           fieldInfo: this.state.fieldInfo,
           boxInfoList: this.state.boxInfo,
+          oldBoxInfoList: this.state.oldBoxInfo,
           onTouchStart: this.touchStart,
-          onTouchEnd: this.touchEnd
+          onTouchEnd: this.touchEnd,
+          resetField: this.resetField,
+          undoField: this.undoField
         })
       );
     }

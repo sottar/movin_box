@@ -9,6 +9,7 @@ export default class Play extends React.Component {
   state: {
     fieldInfo: FieldInfo;
     boxInfo: Array<BoxInfo>;
+    oldBoxInfo: Array<BoxInfo>;
     availableZone: Array<Array<number>>;
     touchStart: Array<number>;
   }
@@ -23,6 +24,7 @@ export default class Play extends React.Component {
         goalInfo: [],
       },
       boxInfo: [],
+      oldBoxInfo: [],
       availableZone: [],
       touchStart: [], // [horizontal axis, vertical axis]
     };
@@ -31,6 +33,9 @@ export default class Play extends React.Component {
     this.touchEnd = this.touchEnd.bind(this);
     this.getNewBoxInfo = this.getNewBoxInfo.bind(this);
     this.updateAvailableZone = this.updateAvailableZone.bind(this);
+    this.backToListPage = this.backToListPage.bind(this);
+    this.resetField = this.resetField.bind(this);
+    this.undoField = this.undoField.bind(this);
   }
 
   touchStart(event: any) {
@@ -75,10 +80,12 @@ export default class Play extends React.Component {
     if (currentBox == undefined) {
       return;
     }
-    const newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, boxInfo, currentBox.position, direction, boxId);
+    const oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
+    const newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
     const newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
     this.setState({
       boxInfo: newBoxInfo,
+      oldBoxInfo: this.state.boxInfo,
       availableZone: newavailableZone,
     });
     if (this.isCleared(newBoxInfo)) {
@@ -171,6 +178,26 @@ export default class Play extends React.Component {
     return true;
   }
 
+  /**
+   * reset current game
+   */
+  resetField() {
+    const initFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
+    this.setState({
+      fieldInfo: initFiled,
+      boxInfo: initFiled.boxInfo,
+    });
+  }
+
+  /**
+   * undo the previous action
+   */
+  undoField() {
+    this.setState({
+      boxInfo: this.state.oldBoxInfo,
+    });
+  }
+
   componentWillMount() {
     const currentFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
     const newAvailableZone = this.updateAvailableZone(
@@ -179,6 +206,7 @@ export default class Play extends React.Component {
     this.setState({
       fieldInfo: currentFiled,
       boxInfo: currentFiled.boxInfo,
+      oldBoxInfo: currentFiled.boxInfo,
       availableZone: newAvailableZone,
     });
   }
@@ -191,8 +219,11 @@ export default class Play extends React.Component {
           level={this.props.level}
           fieldInfo={this.state.fieldInfo}
           boxInfoList={this.state.boxInfo}
+          oldBoxInfoList={this.state.oldBoxInfo}
           onTouchStart={this.touchStart}
           onTouchEnd={this.touchEnd}
+          resetField={this.resetField}
+          undoField={this.undoField}
         />
       </div>
     );

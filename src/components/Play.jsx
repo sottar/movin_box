@@ -179,6 +179,13 @@ export default class Play extends React.Component {
   }
 
   /**
+   * end and back to list page
+   */
+  backToListPage() {
+    this.props.router.push('/list');
+  }
+
+  /**
    * reset current game
    */
   resetField() {
@@ -214,7 +221,10 @@ export default class Play extends React.Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header
+          buttons='backToList'
+          backToList={this.backToListPage}
+        />
         <Field
           level={this.props.level}
           fieldInfo={this.state.fieldInfo}

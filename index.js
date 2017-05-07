@@ -5651,11 +5651,25 @@ var Header = function (_React$Component) {
   }
 
   _createClass(Header, [{
+    key: 'createButtons',
+    value: function createButtons() {
+      if (this.props.buttons == 'backToList') {
+        return _react2.default.createElement(
+          'div',
+          { style: style.button, onClick: this.props.backToList },
+          '\u2190'
+        );
+      }
+      return null;
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var buttons = this.createButtons();
       return _react2.default.createElement(
         'div',
         { style: style.header },
+        buttons,
         _react2.default.createElement(
           'h1',
           { style: style.title },
@@ -5673,6 +5687,7 @@ exports.default = Header;
 
 var style = {
   header: {
+    position: 'relative',
     background: '#fefefe',
     borderTop: '4px solid #4fc3f7',
     borderBottom: '1px solid #efefef'
@@ -5682,6 +5697,13 @@ var style = {
     padding: '5px',
     textAlign: 'center',
     fontSize: '24px'
+  },
+  button: {
+    position: 'absolute',
+    top: '5px',
+    left: '15px',
+    fontSize: '25px',
+    fontWeight: 'bold'
   }
 };
 
@@ -14365,6 +14387,7 @@ var Field = function (_React$Component) {
   }, {
     key: 'createButton',
     value: function createButton(oldBoxInfoList, newBoxInfoList) {
+      // If it can't return, apply the disable style to the button
       if (oldBoxInfoList == newBoxInfoList) {
         return _react2.default.createElement(
           'div',
@@ -14984,6 +15007,16 @@ var Play = function (_React$Component) {
     }
 
     /**
+     * end and back to list page
+     */
+
+  }, {
+    key: 'backToListPage',
+    value: function backToListPage() {
+      this.props.router.push('/list');
+    }
+
+    /**
      * reset current game
      */
 
@@ -15026,7 +15059,10 @@ var Play = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(_Header2.default, null),
+        _react2.default.createElement(_Header2.default, {
+          buttons: 'backToList',
+          backToList: this.backToListPage
+        }),
         _react2.default.createElement(_Field2.default, {
           level: this.props.level,
           fieldInfo: this.state.fieldInfo,

@@ -22,6 +22,7 @@ export default class App extends React.Component {
     this.setState({
       clearedLevels: clearedLevels,
     });
+    this.updateClearedLevels(clearedLevels.toString());
   }
   addOpenedLevel(addLevel: number) {
     let openedLevels = this.state.openedLevels;
@@ -29,6 +30,15 @@ export default class App extends React.Component {
     this.setState({
       openedLevels: openedLevels,
     });
+    this.updateOpenedLevels(openedLevels.toString());
+  }
+  updateClearedLevels(clearedLevels: string) {
+    const storage = new Storage();
+    storage.saveLocalStorage('clearedLevels', clearedLevels);
+  }
+  updateOpenedLevels(openedLevels: string) {
+    const storage = new Storage();
+    storage.saveLocalStorage('openedLevels', openedLevels);
   }
   componentWillMount() {
     const storage = new Storage();
@@ -37,6 +47,7 @@ export default class App extends React.Component {
     if (clearedLevelsStr == null || openedLevelsStr == null) {
       return;
     }
+    // If have played in the past, set to state.
     let clearedLevelsArray = [];
     let openedLevelsArray = [];
     for (const cl of clearedLevelsStr) {
@@ -49,11 +60,6 @@ export default class App extends React.Component {
       clearedLevels: clearedLevelsArray,
       openedLevels: openedLevelsArray,
     });
-  }
-  componentWillUpdate(nextProps: Object, nextState: Object) {
-    const storage = new Storage();
-    storage.saveLocalStorage('clearedLevels', nextState.clearedLevels.toString());
-    storage.saveLocalStorage('openedLevels', nextState.openedLevels.toString());
   }
   render() {
     return (

@@ -13904,16 +13904,66 @@ var App = function (_React$Component) {
     key: 'componentWillMount',
     value: function componentWillMount() {
       var storage = new _Storage2.default();
-      var clearedLevels = storage.getLocalStorage('clearedLevels');
-      var openedLevels = storage.getLocalStorage('openedLevels');
-      if (clearedLevels == null || openedLevels == null) {
+      var clearedLevelsStr = storage.getLocalStorage('clearedLevels');
+      var openedLevelsStr = storage.getLocalStorage('openedLevels');
+      if (clearedLevelsStr == null || openedLevelsStr == null) {
         return;
       }
-      console.log(clearedLevels.split(','));
-      console.log(openedLevels.split(','));
+      var clearedLevelsArray = [];
+      var openedLevelsArray = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = clearedLevelsStr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var cl = _step.value;
+
+          clearedLevelsArray.push(Number(cl));
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = openedLevelsStr[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var ol = _step2.value;
+
+          openedLevelsArray.push(Number(ol));
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
       this.setState({
-        clearedLevels: clearedLevels.split(','),
-        openedLevels: openedLevels.split(',')
+        clearedLevels: clearedLevelsArray,
+        openedLevels: openedLevelsArray
       });
     }
   }, {

@@ -12,6 +12,7 @@ export default class Play extends React.Component {
     availableZone: Array<Array<number>>;
     touchStart: Array<number>;
   }
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -181,6 +182,7 @@ export default class Play extends React.Component {
       availableZone: newAvailableZone,
     });
   }
+
   render() {
     return (
       <div>

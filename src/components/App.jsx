@@ -7,6 +7,7 @@ export default class App extends React.Component {
     clearedLevels: Array<number>;
     openedLevels: Array<number>;
   }
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -16,6 +17,10 @@ export default class App extends React.Component {
     this.addClearedLevel = this.addClearedLevel.bind(this);
     this.addOpenedLevel = this.addOpenedLevel.bind(this);
   }
+
+  /**
+   * add cleared levels to state and localstorage
+   */
   addClearedLevel(addLevel: number) {
     let clearedLevels = this.state.clearedLevels;
     clearedLevels.push(addLevel);
@@ -24,6 +29,10 @@ export default class App extends React.Component {
     });
     this.updateClearedLevels(clearedLevels.toString());
   }
+
+  /**
+   * add opended levels to state and localstorage
+   */
   addOpenedLevel(addLevel: number) {
     let openedLevels = this.state.openedLevels;
     openedLevels.push(addLevel);
@@ -32,14 +41,25 @@ export default class App extends React.Component {
     });
     this.updateOpenedLevels(openedLevels.toString());
   }
+
+  /**
+   * update cleared level to localstorage
+   */
   updateClearedLevels(clearedLevels: string) {
-    const storage = new Storage();
+    let storage = new Storage();
     storage.saveLocalStorage('clearedLevels', clearedLevels);
+    storage = null;
   }
+
+  /**
+   * update opened level to localstorage
+   */
   updateOpenedLevels(openedLevels: string) {
-    const storage = new Storage();
+    let storage = new Storage();
     storage.saveLocalStorage('openedLevels', openedLevels);
+    storage = null;
   }
+
   componentWillMount() {
     const storage = new Storage();
     const clearedLevelsStr = storage.getLocalStorage('clearedLevels');
@@ -61,6 +81,7 @@ export default class App extends React.Component {
       openedLevels: openedLevelsArray,
     });
   }
+
   render() {
     return (
       <div>

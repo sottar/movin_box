@@ -7,6 +7,10 @@ export default class Field extends React.Component {
   constructor(props: any) {
     super(props);
   }
+
+  /**
+   * make playing field matrix React Element
+   */
   createMatrix(fieldInfo: FieldInfo, boxInfoList: Array<BoxInfo>): Array<React.Element<*>> {
     let result: Array<React.Element<*>> = [];
     const horizontal: number = fieldInfo.matrix[0];
@@ -32,6 +36,10 @@ export default class Field extends React.Component {
     );
     return result;
   }
+
+  /**
+   * make playing cells React Element
+   */
   createCells(fieldInfo: FieldInfo, cellSize: number): Array<React.Element<*>> {
     const style = {
       cells: {
@@ -57,6 +65,10 @@ export default class Field extends React.Component {
     }
     return cells;
   }
+
+  /**
+   * make move boxes React Element
+   */
   createBoxes(boxInfoList: Array<BoxInfo>, cellSize: number): Array<React.Element<*>> {
     let boxes = [];
     const style = {
@@ -80,6 +92,10 @@ export default class Field extends React.Component {
     }
     return boxes;
   }
+
+  /**
+   * make playing goals React Element
+   */
   createGoals(fieldInfo: FieldInfo, cellSize: number) {
     let goals = [];
     const style = {
@@ -104,12 +120,15 @@ export default class Field extends React.Component {
     }
     return goals;
   }
+
   handleTouchStart(e: any): void {
     this.props.onTouchStart(e);
   }
+
   handleTouchEnd(e: any): void {
     this.props.onTouchEnd(e);
   }
+
   render() {
     const matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
     return (

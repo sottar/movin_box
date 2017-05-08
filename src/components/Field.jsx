@@ -28,12 +28,13 @@ export default class Field extends React.Component {
         background: '#fefefe',
       },
     };
-    const cells = this.createCells(fieldInfo, cellSize);
-    const boxes = this.createBoxes(boxInfoList, cellSize);
-    const goals = this.createGoals(fieldInfo, cellSize);
+    let cells = this.createCells(fieldInfo, cellSize);
+    let boxes = this.createBoxes(boxInfoList, cellSize);
+    let goals = this.createGoals(fieldInfo, cellSize);
     result.push(
       <div style={style.wrap} key={0}>{cells}{boxes}{goals}</div>
     );
+    cells, boxes, goals = null;
     return result;
   }
 
@@ -109,7 +110,7 @@ export default class Field extends React.Component {
         border: '1px solid #333',
       },
     };
-    const goalInfo: Array<GoalInfo> = fieldInfo.goalInfo;
+    let goalInfo: Array<GoalInfo> = fieldInfo.goalInfo;
     for (let i = 0, len = goalInfo.length; i < len; i++) {
       const currentStyle = {
         backgroundColor: goalInfo[i].color,
@@ -118,6 +119,7 @@ export default class Field extends React.Component {
       };
       goals.push(<div style={m(style.goal, currentStyle)} key={i}></div>);
     }
+    goalInfo = null;
     return goals;
   }
 

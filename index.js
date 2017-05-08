@@ -13935,6 +13935,7 @@ var App = function (_React$Component) {
         clearedLevels: clearedLevels
       });
       this.updateClearedLevels(clearedLevels.toString());
+      clearedLevels = null;
     }
 
     /**
@@ -13950,6 +13951,7 @@ var App = function (_React$Component) {
         openedLevels: openedLevels
       });
       this.updateOpenedLevels(openedLevels.toString());
+      openedLevels = null;
     }
 
     /**
@@ -14041,6 +14043,7 @@ var App = function (_React$Component) {
         clearedLevels: clearedLevelsArray,
         openedLevels: openedLevelsArray
       });
+      storage, clearedLevelsStr, openedLevelsStr, clearedLevelsArray, openedLevelsArray = null;
     }
   }, {
     key: 'render',
@@ -14284,6 +14287,7 @@ var Field = function (_React$Component) {
         boxes,
         goals
       ));
+      cells, boxes, goals = null;
       return result;
     }
 
@@ -14377,6 +14381,7 @@ var Field = function (_React$Component) {
         };
         goals.push(_react2.default.createElement('div', { style: (0, _utils.m)(style.goal, currentStyle), key: i }));
       }
+      goalInfo = null;
       return goals;
     }
 
@@ -14576,6 +14581,7 @@ var LevelList = function (_React$Component) {
               currentNum
             ));
           }
+          currentNum = null;
         }
         result.push(_react2.default.createElement(
           'ul',
@@ -14847,6 +14853,7 @@ var Play = function (_React$Component) {
           that.props.router.push('/clear/' + that.props.params.level);
         }, 700);
       }
+      boxInfo, oldBoxInfo, newBoxInfo, newavailableZone = null;
     }
 
     /**
@@ -14938,7 +14945,6 @@ var Play = function (_React$Component) {
   }, {
     key: 'updateAvailableZone',
     value: function updateAvailableZone(boxInfo, blockPosition) {
-      var newAvailbleZone = blockPosition;
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;
@@ -14949,7 +14955,7 @@ var Play = function (_React$Component) {
 
           var x = box.position[0];
           var y = box.position[1];
-          newAvailbleZone[y][x] = 1;
+          blockPosition[y][x] = 1;
         }
       } catch (err) {
         _didIteratorError3 = true;
@@ -14966,7 +14972,7 @@ var Play = function (_React$Component) {
         }
       }
 
-      return newAvailbleZone;
+      return blockPosition;
     }
 
     /**

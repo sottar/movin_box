@@ -28,6 +28,7 @@ export default class App extends React.Component {
       clearedLevels: clearedLevels,
     });
     this.updateClearedLevels(clearedLevels.toString());
+    clearedLevels = null;
   }
 
   /**
@@ -40,6 +41,7 @@ export default class App extends React.Component {
       openedLevels: openedLevels,
     });
     this.updateOpenedLevels(openedLevels.toString());
+    openedLevels = null;
   }
 
   /**
@@ -61,9 +63,9 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    const storage = new Storage();
-    const clearedLevelsStr = storage.getLocalStorage('clearedLevels');
-    const openedLevelsStr = storage.getLocalStorage('openedLevels');
+    let storage = new Storage();
+    let clearedLevelsStr = storage.getLocalStorage('clearedLevels');
+    let openedLevelsStr = storage.getLocalStorage('openedLevels');
     if (clearedLevelsStr == null || openedLevelsStr == null) {
       return;
     }
@@ -80,6 +82,7 @@ export default class App extends React.Component {
       clearedLevels: clearedLevelsArray,
       openedLevels: openedLevelsArray,
     });
+    storage, clearedLevelsStr, openedLevelsStr, clearedLevelsArray, openedLevelsArray = null;
   }
 
   render() {

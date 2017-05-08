@@ -71,7 +71,7 @@ export default class Play extends React.Component {
    */
   moveBox(boxId: number, direction: number): void {
     let currentBox: BoxInfo;
-    const boxInfo = this.state.boxInfo;
+    let boxInfo = this.state.boxInfo;
     for (let box of boxInfo) {
       if (box.id == boxId) {
         currentBox = box;
@@ -80,9 +80,9 @@ export default class Play extends React.Component {
     if (currentBox == undefined) {
       return;
     }
-    const oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
-    const newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
-    const newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
+    let oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
+    let newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
+    let newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
     this.setState({
       boxInfo: newBoxInfo,
       oldBoxInfo: this.state.boxInfo,
@@ -96,6 +96,7 @@ export default class Play extends React.Component {
         that.props.router.push('/clear/' + that.props.params.level);
       }, 700);
     }
+    boxInfo, oldBoxInfo, newBoxInfo, newavailableZone = null;
   }
 
   /**
@@ -157,13 +158,12 @@ export default class Play extends React.Component {
   }
 
   updateAvailableZone(boxInfo: Array<BoxInfo>, blockPosition: Array<Array<number>>): Array<Array<number>> {
-    let newAvailbleZone = blockPosition;
     for (const box of boxInfo) {
       const x = box.position[0];
       const y = box.position[1];
-      newAvailbleZone[y][x] = 1;
+      blockPosition[y][x] = 1;
     }
-    return newAvailbleZone;
+    return blockPosition;
   }
 
   /**

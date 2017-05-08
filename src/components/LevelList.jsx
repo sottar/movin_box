@@ -10,7 +10,7 @@ export default class LevelList extends React.Component {
     for (let i = 1; i <= Math.ceil(this.props.levelPerPages / levelPerColumn); i++) {
       let list: Array<Object> = [];
       for (let n = 0; n < levelPerColumn; n++) {
-        const currentNum: number = (i - 1) * levelPerColumn + 1 + n;
+        let currentNum: number = (i - 1) * levelPerColumn + 1 + n;
         if (this.props.clearedLevels.indexOf(currentNum) >= 0) {
           list.push(
             <li key={currentNum} style={style.box}>
@@ -30,6 +30,7 @@ export default class LevelList extends React.Component {
         } else {
           list.push(<li key={currentNum} style={m(style.box, style.closedBox)}>{currentNum}</li>);
         }
+        currentNum = null;
       }
       result.push(
         <ul key={i} style={style.listWraper}>

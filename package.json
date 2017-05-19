@@ -30,11 +30,11 @@
     "redux": "^3.6.0"
   },
   "scripts": {
-    "webpack watch": "webpack --watch",
-    "webpack build": "NODE_ENV='production' webpack -p",
-    "webpack start": "webpack; webpack-dev-server --inline --content-base",
+    "watch": "webpack --watch",
+    "build": "NODE_ENV='production' webpack -p",
+    "start": "webpack-dev-server --inline --content-base",
     "flow": "flow",
     "lint": "eslint ./src/**.jsx",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "yarn flow && yarn lint"
   }
 }

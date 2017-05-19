@@ -14,8 +14,9 @@ export default class App extends React.Component {
       clearedLevels: [],
       openedLevels: [1],
     };
-    this.addClearedLevel = this.addClearedLevel.bind(this);
-    this.addOpenedLevel = this.addOpenedLevel.bind(this);
+    const that: any = this;
+    that.addClearedLevel = this.addClearedLevel.bind(this);
+    that.addOpenedLevel = this.addOpenedLevel.bind(this);
   }
 
   /**

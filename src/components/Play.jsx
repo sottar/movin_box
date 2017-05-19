@@ -28,14 +28,15 @@ export default class Play extends React.Component {
       availableZone: [],
       touchStart: [], // [horizontal axis, vertical axis]
     };
-    this.moveBox = this.moveBox.bind(this);
-    this.touchStart = this.touchStart.bind(this);
-    this.touchEnd = this.touchEnd.bind(this);
-    this.getNewBoxInfo = this.getNewBoxInfo.bind(this);
-    this.updateAvailableZone = this.updateAvailableZone.bind(this);
-    this.backToListPage = this.backToListPage.bind(this);
-    this.resetField = this.resetField.bind(this);
-    this.undoField = this.undoField.bind(this);
+    const that: any = this;
+    that.moveBox = this.moveBox.bind(this);
+    that.touchStart = this.touchStart.bind(this);
+    that.touchEnd = this.touchEnd.bind(this);
+    that.getNewBoxInfo = this.getNewBoxInfo.bind(this);
+    that.updateAvailableZone = this.updateAvailableZone.bind(this);
+    that.backToListPage = this.backToListPage.bind(this);
+    that.resetField = this.resetField.bind(this);
+    that.undoField = this.undoField.bind(this);
   }
 
   touchStart(event: any) {
@@ -70,7 +71,12 @@ export default class Play extends React.Component {
    * move box and set new state
    */
   moveBox(boxId: number, direction: number): void {
-    let currentBox: BoxInfo;
+    let currentBox: BoxInfo = {
+      color: '',
+      cleared: false,
+      id: 0,
+      position: [],
+    };
     let boxInfo = this.state.boxInfo;
     for (let box of boxInfo) {
       if (box.id == boxId) {

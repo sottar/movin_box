@@ -119,7 +119,7 @@ export default class Field extends React.Component {
       };
       goals.push(<div style={m(style.goal, currentStyle)} key={i}></div>);
     }
-    goalInfo = null;
+    goalInfo = [];
     return goals;
   }
 

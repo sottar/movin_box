@@ -30,7 +30,6 @@ export default class LevelList extends React.Component {
         } else {
           list.push(<li key={currentNum} style={m(style.box, style.closedBox)}>{currentNum}</li>);
         }
-        currentNum = null;
       }
       result.push(
         <ul key={i} style={style.listWraper}>

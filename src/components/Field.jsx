@@ -153,6 +153,9 @@ export default class Field extends React.Component {
   }
 
   render() {
+    if (this.props.fieldInfo.matrix.length == 0) {
+      return null;
+    }
     const matrix = this.createMatrix(this.props.fieldInfo, this.props.boxInfoList);
     const buttons = this.createButton(this.props.oldBoxInfoList, this.props.boxInfoList);
     return (

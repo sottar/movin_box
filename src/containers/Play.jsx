@@ -1,11 +1,13 @@
 /* @flow */
 import React from 'react';
-import Header from './Header';
-import Field from './Field';
+import { connect } from 'react-redux';
+import { newGame, moveBox, undo, reset } from '../actions';
+import Header from '../components/Header';
+import Field from '../components/Field';
 import type { FieldInfo, BoxInfo } from '../Types';
-import { FieldList } from './FieldList';
+import { FieldList } from '../components/FieldList';
 
-export default class Play extends React.Component {
+class Play extends React.Component {
   state: {
     fieldInfo: FieldInfo;
     boxInfo: Array<BoxInfo>;
@@ -16,7 +18,7 @@ export default class Play extends React.Component {
 
   constructor(props: any) {
     super(props);
-    this.state = {
+    this.props = {
       fieldInfo: {
         matrix: [],
         blockPosition: [],
@@ -43,8 +45,8 @@ export default class Play extends React.Component {
     if (event.touches.length != 1) {
       return;
     }
-    this.state.touchStart[0] = event.touches[0].screenX;
-    this.state.touchStart[1] = event.touches[0].screenY;
+    this.props.touchStart[0] = event.touches[0].screenX;
+    this.props.touchStart[1] = event.touches[0].screenY;
     event.preventDefault();
   }
 
@@ -53,8 +55,8 @@ export default class Play extends React.Component {
     if (event.changedTouches.length != 1) {
       return;
     }
-    const deltaX = event.changedTouches[0].screenX - this.state.touchStart[0];
-    const deltaY = event.changedTouches[0].screenY - this.state.touchStart[1];
+    const deltaX = event.changedTouches[0].screenX - this.props.touchStart[0];
+    const deltaY = event.changedTouches[0].screenY - this.props.touchStart[1];
     let direction: number = -1; // left:0, up:1, right:2, down:3, none: -1
     if (Math.abs(deltaX) > 3 * Math.abs(deltaY) && Math.abs(deltaX) > 30) {
       direction = deltaX > 0 ? 2 : 0;
@@ -77,7 +79,7 @@ export default class Play extends React.Component {
       id: 0,
       position: [],
     };
-    let boxInfo = this.state.boxInfo;
+    let boxInfo = this.props.boxInfo;
     for (let box of boxInfo) {
       if (box.id == boxId) {
         currentBox = box;
@@ -87,13 +89,22 @@ export default class Play extends React.Component {
       return;
     }
     let oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
-    let newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.state.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
-    let newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.state.fieldInfo.blockPosition)));
-    this.setState({
+    let newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.props.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
+    let newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.props.fieldInfo.blockPosition)));
+
+    const { dispatch } = this.props;
+    const value = {
       boxInfo: newBoxInfo,
-      oldBoxInfo: this.state.boxInfo,
+      oldBoxInfo: this.props.boxInfo,
       availableZone: newavailableZone,
-    });
+    };
+    dispatch(moveBox(value));
+
+    // this.setState({
+    //   boxInfo: newBoxInfo,
+    //   oldBoxInfo: this.props.boxInfo,
+    //   availableZone: newavailableZone,
+    // });
     if (this.isCleared(newBoxInfo)) {
       this.props.addClearedLevel(Number(this.props.params.level));
       this.props.addOpenedLevel(Number(this.props.params.level) + 1);
@@ -153,7 +164,7 @@ export default class Play extends React.Component {
       }
       newBoxInfo[boxId - 1].position[1] += count;
     }
-    for (let goal of this.state.fieldInfo.goalInfo) {
+    for (let goal of this.props.fieldInfo.goalInfo) {
       if (newBoxInfo[boxId - 1].position[0] == goal.position[0] && newBoxInfo[boxId - 1].position[1] == goal.position[1]) {
         newBoxInfo[boxId - 1].cleared = true;
         break;
@@ -195,33 +206,53 @@ export default class Play extends React.Component {
    * reset current game
    */
   resetField() {
+    const { dispatch } = this.props;
     const initFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
-    this.setState({
+
+    const value = {
       fieldInfo: initFiled,
       boxInfo: initFiled.boxInfo,
-    });
+    };
+    dispatch(reset(value));
+
+    // this.setState({
+    //   fieldInfo: initFiled,
+    //   boxInfo: initFiled.boxInfo,
+    // });
   }
 
   /**
    * undo the previous action
    */
   undoField() {
-    this.setState({
-      boxInfo: this.state.oldBoxInfo,
-    });
+    const { dispatch } = this.props;
+    const value = this.props.oldBoxInfo;
+    dispatch(undo(value));
+    // this.setState({
+    //   boxInfo: this.props.oldBoxInfo,
+    // });
   }
 
   componentWillMount() {
+    const { dispatch } = this.props;
     const currentFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
     const newAvailableZone = this.updateAvailableZone(
             currentFiled.boxInfo,
             JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition)));
-    this.setState({
+    const value = {
       fieldInfo: currentFiled,
       boxInfo: currentFiled.boxInfo,
       oldBoxInfo: currentFiled.boxInfo,
       availableZone: newAvailableZone,
-    });
+    };
+    dispatch(newGame(value));
+
+    // this.setState({
+    //   fieldInfo: currentFiled,
+    //   boxInfo: currentFiled.boxInfo,
+    //   oldBoxInfo: currentFiled.boxInfo,
+    //   availableZone: newAvailableZone,
+    // });
   }
 
   render() {
@@ -232,10 +263,9 @@ export default class Play extends React.Component {
           backToList={this.backToListPage}
         />
         <Field
-          level={this.props.level}
-          fieldInfo={this.state.fieldInfo}
-          boxInfoList={this.state.boxInfo}
-          oldBoxInfoList={this.state.oldBoxInfo}
+          fieldInfo={this.props.fieldInfo}
+          boxInfoList={this.props.boxInfo}
+          oldBoxInfoList={this.props.oldBoxInfo}
           onTouchStart={this.touchStart}
           onTouchEnd={this.touchEnd}
           resetField={this.resetField}
@@ -245,3 +275,45 @@ export default class Play extends React.Component {
     );
   }
 }
+
+
+// function mapStateToProps(state) {
+//   const { selectedSubreddit, postsBySubreddit } = state
+//   const {
+//     isFetching,
+//     lastUpdated,
+//     items: posts
+//   } = postsBySubreddit[selectedSubreddit] || {
+//     isFetching: true,
+//     items: []
+//   }
+
+//   return {
+//     selectedSubreddit,
+//     posts,
+//     isFetching,
+//     lastUpdated
+//   }
+// }
+function mapStateToProps(state) {
+  return {
+    // propsを通して取得する際に使う名前: Storeのstateの値
+    // value: state.value,
+    xxx: 'xxxxx',
+    fieldInfo: state.gameReducer.fieldInfo,
+    boxInfo: state.gameReducer.boxInfo,
+    oldBoxInfo: state.gameReducer.oldBoxInfo,
+    availableZone: state.gameReducer.availableZone,
+  };
+}
+
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     // propsを通して取得する際に使う名前
+//     onClick(value) {
+//       // Storeのdispatchメソッド（引数はAction Creator）
+//       dispatch(send(value));
+//     },
+//   };
+// }
+export default connect(mapStateToProps)(Play);

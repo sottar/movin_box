@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { newGame, moveBox, undo, reset, touchStart } from '../actions';
 import Header from '../components/Header';
 import Field from '../components/Field';
-import type { FieldInfo, BoxInfo } from '../Types';
+import type { FieldInfo, BoxInfo} from '../Types';
 import { FieldList } from '../components/FieldList';
 
 class Play extends React.Component {
@@ -18,18 +18,6 @@ class Play extends React.Component {
 
   constructor(props: any) {
     super(props);
-    this.props = {
-      fieldInfo: {
-        matrix: [],
-        blockPosition: [],
-        boxInfo: [],
-        goalInfo: [],
-      },
-      boxInfo: [],
-      oldBoxInfo: [],
-      availableZone: [],
-      touchStart: [], // [horizontal axis, vertical axis]
-    };
     const that: any = this;
     that.moveBox = this.moveBox.bind(this);
     that.touchStart = this.touchStart.bind(this);
@@ -126,7 +114,6 @@ class Play extends React.Component {
    * get moved box infomation
    */
   getNewBoxInfo(availableZone: Array<Array<number>>, oldBoxInfo: Array<BoxInfo>, oldBoxPosition: Array<number>, direction: number, boxId: number): Array<BoxInfo> {
-    console.log(availableZone);
     let newBoxInfo = Object.assign(oldBoxInfo);
     if (direction == 0) { // left
       const searcherTarget = availableZone[oldBoxPosition[1]];
@@ -326,3 +313,4 @@ function mapStateToProps(state) {
 //   };
 // }
 export default connect(mapStateToProps)(Play);
+

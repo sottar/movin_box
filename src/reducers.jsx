@@ -3,24 +3,6 @@ import { combineReducers } from 'redux';
 import { NEW_GAME, MOVE_BOX, UNDO, RESET, TOUCH_START } from './actions';
 import { routerReducer } from 'react-router-redux';
 
-function initReducer(state = {
-  gameReducer: {
-    fieldInfo: {
-      matrix: [],
-      blockPosition: [],
-      boxInfo: [],
-      goalInfo: [],
-    },
-    boxInfo: [],
-    oldBoxInfo: [],
-    availableZone: [],
-    touchStart: [], // [horizontal axis, vertical axis]
-  },
-}) {
-  return state;
-}
-
-
 function gameReducer(state = {
   fieldInfo: {
     matrix: [],

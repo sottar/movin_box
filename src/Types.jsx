@@ -20,3 +20,32 @@ export type FieldInfo = {
   boxInfo: Array<BoxInfo>;
   goalInfo: Array<GoalInfo>;
 }
+
+
+export type NewGameValue = {
+  fieldInfo: FieldInfo,
+  boxInfo: Array<BoxInfo>,
+  oldBoxInfo: Array<BoxInfo>,
+  availableZone: Array<Array<number>>,
+}
+
+export type MoveBoxValue = {
+  boxInfo: Array<BoxInfo>,
+  oldBoxInfo: Array<BoxInfo>,
+  availableZone: Array<Array<number>>,
+}
+
+export type UndoValue = {
+  boxInfo: Array<BoxInfo>,
+}
+
+export type ResetValue = {
+  fieldInfo: FieldInfo,
+  boxInfo: Array<BoxInfo>,
+}
+
+export type TouchStartValue = {
+  touchStart: Array<number>,
+}
+
+export type Action = { type: string; payload: Object };

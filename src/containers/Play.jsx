@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react';
 import { connect } from 'react-redux';
-import { newGame, moveBox, undo, reset } from '../actions';
+import { newGame, moveBox, undo, reset, touchStart } from '../actions';
 import Header from '../components/Header';
 import Field from '../components/Field';
 import type { FieldInfo, BoxInfo } from '../Types';
@@ -45,8 +45,14 @@ class Play extends React.Component {
     if (event.touches.length != 1) {
       return;
     }
-    this.props.touchStart[0] = event.touches[0].screenX;
-    this.props.touchStart[1] = event.touches[0].screenY;
+    const { dispatch } = this.props;
+    const value = {
+      touchStart: [event.touches[0].screenX, event.touches[0].screenY],
+    };
+    dispatch(touchStart(value));
+
+    // this.props.touchStart[0] = event.touches[0].screenX;
+    // this.props.touchStart[1] = event.touches[0].screenY;
     event.preventDefault();
   }
 
@@ -120,6 +126,7 @@ class Play extends React.Component {
    * get moved box infomation
    */
   getNewBoxInfo(availableZone: Array<Array<number>>, oldBoxInfo: Array<BoxInfo>, oldBoxPosition: Array<number>, direction: number, boxId: number): Array<BoxInfo> {
+    console.log(availableZone);
     let newBoxInfo = Object.assign(oldBoxInfo);
     if (direction == 0) { // left
       const searcherTarget = availableZone[oldBoxPosition[1]];
@@ -299,20 +306,20 @@ function mapStateToProps(state) {
   return {
     // propsを通して取得する際に使う名前: Storeのstateの値
     // value: state.value,
-    xxx: 'xxxxx',
     fieldInfo: state.gameReducer.fieldInfo,
     boxInfo: state.gameReducer.boxInfo,
     oldBoxInfo: state.gameReducer.oldBoxInfo,
     availableZone: state.gameReducer.availableZone,
+    touchStart: state.gameReducer.touchStart,
   };
 }
 
 // function mapDispatchToProps(dispatch) {
 //   return {
 //     // propsを通して取得する際に使う名前
-//     onClick(value) {
+//     onTouchStart(value) {
 //       // Storeのdispatchメソッド（引数はAction Creator）
-//       dispatch(send(value));
+//       dispatch(moveBox(value));
 //     },
 //   };
 // }

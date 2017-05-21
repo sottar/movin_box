@@ -1,6 +1,6 @@
 /* @flow */
 import { combineReducers } from 'redux';
-import { NEW_GAME, MOVE_BOX, UNDO } from './actions';
+import { NEW_GAME, MOVE_BOX, UNDO, TOUCH_START } from './actions';
 import { routerReducer } from 'react-router-redux';
 
 function initReducer(state = {
@@ -39,17 +39,21 @@ function gameReducer(state = {
       fieldInfo: action.value.fieldInfo,
       boxInfo: action.value.fieldInfo.boxInfo,
       oldBoxInfo: action.value.fieldInfo.boxInfo,
-      availableZone: action.value.newAvailableZone,
+      availableZone: action.value.availableZone,
     });
   case MOVE_BOX:
     return Object.assign({}, state, {
-      boxInfo: action.newBoxInfo,
-      oldBoxInfo: action.boxInfo,
-      availableZone: action.newavailableZone,
+      boxInfo: action.value.boxInfo,
+      oldBoxInfo: action.value.oldBoxInfo,
+      availableZone: action.value.availableZone,
     });
   case UNDO:
     return Object.assign({}, state, {
-      boxInfo: action.oldBoxInfo,
+      boxInfo: action.value.oldBoxInfo,
+    });
+  case TOUCH_START:
+    return Object.assign({}, state, {
+      touchStart: action.value.touchStart,
     });
   default:
     return state;

@@ -233,7 +233,9 @@ class Play extends React.Component {
    */
   undoField() {
     const { dispatch } = this.props;
-    const value = this.props.oldBoxInfo;
+    const value = {
+      boxInfo: this.props.oldBoxInfo,
+    };
     dispatch(undo(value));
     // this.setState({
     //   boxInfo: this.props.oldBoxInfo,

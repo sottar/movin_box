@@ -84,8 +84,7 @@ class Play extends React.Component {
     }
     let oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
     let newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.props.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
-    let newavailableZone = this.updateAvailableZone(boxInfo, JSON.parse(JSON.stringify(this.props.fieldInfo.blockPosition)));
-
+    let newavailableZone = this.updateAvailableZone(newBoxInfo, JSON.parse(JSON.stringify(this.props.fieldInfo.blockPosition)));
     const { dispatch } = this.props;
     const value = {
       boxInfo: newBoxInfo,

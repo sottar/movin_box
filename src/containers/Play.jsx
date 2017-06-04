@@ -201,8 +201,11 @@ class Play extends React.Component {
   resetField() {
     const { dispatch } = this.props;
     const initFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
-
+    const newAvailableZone = this.updateAvailableZone(
+            initFiled.boxInfo,
+            JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition)));
     const value = {
+      availableZone: newAvailableZone,
       fieldInfo: initFiled,
       boxInfo: initFiled.boxInfo,
     };
@@ -219,8 +222,13 @@ class Play extends React.Component {
    */
   undoField() {
     const { dispatch } = this.props;
+    const oldAvailableZone = this.updateAvailableZone(
+          this.props.oldBoxInfo,
+          JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition))
+          );
     const value = {
       boxInfo: this.props.oldBoxInfo,
+      availableZone: oldAvailableZone,
     };
     dispatch(undo(value));
     // this.setState({

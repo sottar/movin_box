@@ -32,11 +32,13 @@ function gameReducer(state = {
   case UNDO:
     return Object.assign({}, state, {
       boxInfo: action.value.boxInfo,
+      availableZone: action.value.availableZone,
     });
   case RESET:
     return Object.assign({}, state, {
       fieldInfo: action.value.fieldInfo,
       boxInfo: action.value.boxInfo,
+      availableZone: action.value.availableZone,
     });
   case TOUCH_START:
     return Object.assign({}, state, {

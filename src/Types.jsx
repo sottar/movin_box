@@ -42,6 +42,7 @@ export type UndoValue = {
 export type ResetValue = {
   fieldInfo: FieldInfo,
   boxInfo: Array<BoxInfo>,
+  availableZone: Array<Array<number>>,
 }
 
 export type TouchStartValue = {

@@ -258,13 +258,14 @@ class Play extends React.Component {
           backToList={this.backToListPage}
         />
         <Field
-          fieldInfo={this.props.fieldInfo}
-          boxInfoList={this.props.boxInfo}
-          oldBoxInfoList={this.props.oldBoxInfo}
           onTouchStart={this.touchStart}
           onTouchEnd={this.touchEnd}
           resetField={this.resetField}
           undoField={this.undoField}
+          level={this.props.level}
+          fieldInfo={this.props.fieldInfo}
+          boxInfoList={this.props.boxInfo}
+          oldBoxInfoList={this.props.oldBoxInfo}
         />
       </div>
     );

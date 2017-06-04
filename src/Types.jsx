@@ -1,38 +1,38 @@
 /* @flow */
 
 export type BoxInfo = {
+  cleared: boolean; // true is matched goal's position and color
+  color: string;
   id: number;
   position: Array<number>; // [Horizontal, Vertical]. [0, 0] is upper left position
-  color: string;
-  cleared: boolean; // true is matched goal's position and color
 };
 
 export type GoalInfo = {
+  cleared: boolean; // true is matched box's position and color
+  color: string;
   id: number;
   position: Array<number>; // [Horizontal, Vertical]. [0, 0] is upper left position
-  color: string;
-  cleared: boolean; // true is matched box's position and color
 };
 
 export type FieldInfo = {
-  matrix: Array<number>; // [Horizontal, Vertical]
   blockPosition: Array<Array<number>>; // 1 is block position, 0 is enable to moving
   boxInfo: Array<BoxInfo>;
   goalInfo: Array<GoalInfo>;
+  matrix: Array<number>; // [Horizontal, Vertical]
 }
 
 
 export type NewGameValue = {
-  fieldInfo: FieldInfo,
-  boxInfo: Array<BoxInfo>,
-  oldBoxInfo: Array<BoxInfo>,
   availableZone: Array<Array<number>>,
+  boxInfo: Array<BoxInfo>,
+  fieldInfo: FieldInfo,
+  oldBoxInfo: Array<BoxInfo>,
 }
 
 export type MoveBoxValue = {
+  availableZone: Array<Array<number>>,
   boxInfo: Array<BoxInfo>,
   oldBoxInfo: Array<BoxInfo>,
-  availableZone: Array<Array<number>>,
 }
 
 export type UndoValue = {
@@ -40,9 +40,9 @@ export type UndoValue = {
 }
 
 export type ResetValue = {
-  fieldInfo: FieldInfo,
-  boxInfo: Array<BoxInfo>,
   availableZone: Array<Array<number>>,
+  boxInfo: Array<BoxInfo>,
+  fieldInfo: FieldInfo,
 }
 
 export type TouchStartValue = {

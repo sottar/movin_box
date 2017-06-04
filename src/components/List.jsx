@@ -10,8 +10,8 @@ export default class List extends React.Component {
       <div>
         <Header />
         <LevelList
-          levelPerPages={levelPerPages}
           clearedLevels={this.props.clearedLevels}
+          levelPerPages={levelPerPages}
           openedLevels={this.props.openedLevels}
         />
       </div>

@@ -5,7 +5,7 @@ import Header from './Header';
 
 export default class Clear extends React.Component {
   render() {
-    const nextPlay: string = '/play/' + (Number(this.props.params.level) + 1);
+    const nextPlay: string = `/play/${(Number(this.props.params.level) + 1)}`;
     return (
       <div>
         <Header />

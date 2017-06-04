@@ -76,8 +76,8 @@ export default class Field extends React.Component {
       box: {
         position: 'absolute',
         margin: 0,
-        width: cellSize + 'px',
-        height: cellSize + 'px',
+        width: `${cellSize}px`,
+        height: `${cellSize}px`,
         boxSizing: 'border-box',
         border: '1px solid #333',
         transition: 'all 0.5s',
@@ -103,8 +103,8 @@ export default class Field extends React.Component {
       goal: {
         position: 'absolute',
         margin: 0,
-        width: cellSize / 2 + 'px',
-        height: cellSize / 2 + 'px',
+        width: `${cellSize / 2}px`,
+        height: `${cellSize / 2}px`,
         boxSizing: 'border-box',
         borderRadius: '50% 50%',
         border: '1px solid #333',

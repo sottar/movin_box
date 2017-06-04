@@ -14,7 +14,7 @@ export default class LevelList extends React.Component {
         if (this.props.clearedLevels.indexOf(currentNum) >= 0) {
           list.push(
             <li key={currentNum} style={style.box}>
-              <Link to={'/play/' + currentNum} style={m(style.link, style.clearedLink)}>
+              <Link to={`/play/${currentNum}`} style={m(style.link, style.clearedLink)}>
                 {currentNum}
               </Link>
             </li>
@@ -22,7 +22,7 @@ export default class LevelList extends React.Component {
         } else if (this.props.openedLevels.indexOf(currentNum) >= 0) {
           list.push(
             <li key={currentNum} style={style.box}>
-              <Link to={'/play/' + currentNum} style={m(style.link, style.openedLink)}>
+              <Link to={`/play/${currentNum}`} style={m(style.link, style.openedLink)}>
                 {currentNum}
               </Link>
             </li>

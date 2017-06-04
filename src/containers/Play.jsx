@@ -1,6 +1,7 @@
 /* @flow */
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { newGame, moveBox, undo, reset, touchStart } from '../actions';
 import Header from '../components/Header';
 import Field from '../components/Field';
@@ -38,9 +39,6 @@ class Play extends React.Component {
       touchStart: [event.touches[0].screenX, event.touches[0].screenY],
     };
     dispatch(touchStart(value));
-
-    // this.props.touchStart[0] = event.touches[0].screenX;
-    // this.props.touchStart[1] = event.touches[0].screenY;
     event.preventDefault();
   }
 
@@ -82,9 +80,9 @@ class Play extends React.Component {
     if (currentBox == undefined) {
       return;
     }
-    let oldBoxInfo =  JSON.parse(JSON.stringify(boxInfo));
+    let oldBoxInfo = _.cloneDeep(boxInfo);
     let newBoxInfo: Array<BoxInfo> = this.getNewBoxInfo(this.props.availableZone, oldBoxInfo, currentBox.position, direction, boxId);
-    let newavailableZone = this.updateAvailableZone(newBoxInfo, JSON.parse(JSON.stringify(this.props.fieldInfo.blockPosition)));
+    let newavailableZone = this.updateAvailableZone(newBoxInfo, _.cloneDeep(this.props.fieldInfo.blockPosition));
     const { dispatch } = this.props;
     const value = {
       boxInfo: newBoxInfo,
@@ -93,11 +91,6 @@ class Play extends React.Component {
     };
     dispatch(moveBox(value));
 
-    // this.setState({
-    //   boxInfo: newBoxInfo,
-    //   oldBoxInfo: this.props.boxInfo,
-    //   availableZone: newavailableZone,
-    // });
     if (this.isCleared(newBoxInfo)) {
       this.props.addClearedLevel(Number(this.props.params.level));
       this.props.addOpenedLevel(Number(this.props.params.level) + 1);
@@ -200,21 +193,16 @@ class Play extends React.Component {
    */
   resetField() {
     const { dispatch } = this.props;
-    const initFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
+    const initFiled: FieldInfo = _.cloneDeep(FieldList)[this.props.params.level - 1];
     const newAvailableZone = this.updateAvailableZone(
             initFiled.boxInfo,
-            JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition)));
+            _.cloneDeep(FieldList[this.props.params.level - 1].blockPosition));
     const value = {
       availableZone: newAvailableZone,
       fieldInfo: initFiled,
       boxInfo: initFiled.boxInfo,
     };
     dispatch(reset(value));
-
-    // this.setState({
-    //   fieldInfo: initFiled,
-    //   boxInfo: initFiled.boxInfo,
-    // });
   }
 
   /**
@@ -224,24 +212,20 @@ class Play extends React.Component {
     const { dispatch } = this.props;
     const oldAvailableZone = this.updateAvailableZone(
           this.props.oldBoxInfo,
-          JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition))
-          );
+          _.cloneDeep(FieldList[this.props.params.level - 1].blockPosition));
     const value = {
       boxInfo: this.props.oldBoxInfo,
       availableZone: oldAvailableZone,
     };
     dispatch(undo(value));
-    // this.setState({
-    //   boxInfo: this.props.oldBoxInfo,
-    // });
   }
 
   componentWillMount() {
     const { dispatch } = this.props;
-    const currentFiled: FieldInfo = JSON.parse(JSON.stringify(FieldList))[this.props.params.level - 1];
+    const currentFiled: FieldInfo = _.cloneDeep(FieldList)[this.props.params.level - 1];
     const newAvailableZone = this.updateAvailableZone(
             currentFiled.boxInfo,
-            JSON.parse(JSON.stringify(FieldList[this.props.params.level - 1].blockPosition)));
+            _.cloneDeep(FieldList[this.props.params.level - 1].blockPosition));
     const value = {
       fieldInfo: currentFiled,
       boxInfo: currentFiled.boxInfo,
@@ -249,13 +233,6 @@ class Play extends React.Component {
       availableZone: newAvailableZone,
     };
     dispatch(newGame(value));
-
-    // this.setState({
-    //   fieldInfo: currentFiled,
-    //   boxInfo: currentFiled.boxInfo,
-    //   oldBoxInfo: currentFiled.boxInfo,
-    //   availableZone: newAvailableZone,
-    // });
   }
 
   render() {
@@ -281,28 +258,8 @@ class Play extends React.Component {
 }
 
 
-// function mapStateToProps(state) {
-//   const { selectedSubreddit, postsBySubreddit } = state
-//   const {
-//     isFetching,
-//     lastUpdated,
-//     items: posts
-//   } = postsBySubreddit[selectedSubreddit] || {
-//     isFetching: true,
-//     items: []
-//   }
-
-//   return {
-//     selectedSubreddit,
-//     posts,
-//     isFetching,
-//     lastUpdated
-//   }
-// }
 function mapStateToProps(state) {
   return {
-    // propsを通して取得する際に使う名前: Storeのstateの値
-    // value: state.value,
     fieldInfo: state.gameReducer.fieldInfo,
     boxInfo: state.gameReducer.boxInfo,
     oldBoxInfo: state.gameReducer.oldBoxInfo,
@@ -310,15 +267,5 @@ function mapStateToProps(state) {
     touchStart: state.gameReducer.touchStart,
   };
 }
-
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     // propsを通して取得する際に使う名前
-//     onTouchStart(value) {
-//       // Storeのdispatchメソッド（引数はAction Creator）
-//       dispatch(moveBox(value));
-//     },
-//   };
-// }
 export default connect(mapStateToProps)(Play);
 
